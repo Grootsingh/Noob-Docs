@@ -196,15 +196,15 @@ we can use all the AxiosShorthand with Axios Instances.
 
 ### what keys can config object can take:
 
-1. `url: '/user'`
+1. `url: '/user'`<br>
 
    is the server URL that will be used for the request.
 
-3. `method: 'get', // default`
+3. `method: 'get', // default`<br>
 
     request method type
 
-5. `baseURL: 'https://some-domain.com/api'`
+5. `baseURL: 'https://some-domain.com/api'`<br>
 
    `baseURL` will be prepended to `url` unless `url` is absolute.
    It can be convenient to set `baseURL` for an instance of axios to pass
@@ -213,7 +213,7 @@ we can use all the AxiosShorthand with Axios Instances.
 7. `transformRequest: [function (data, headers) {`<br>
    `// Do whatever you want to transform the data`<br>
    ` return data;`<br>
-   `}]`
+   `}]`<br>
 
    the transformRequest option allows you to define a function that will be applied to the request data before it is sent to the server. This function can be used to transform the data in a specific format or perform any necessary preprocessing.
 
@@ -223,7 +223,7 @@ we can use all the AxiosShorthand with Axios Instances.
 5. `transformResponse: [function (data) {`<br>
    `// Do whatever you want to transform the data`<br>
    `return data;`<br>
-   `}]`
+   `}]`<br>
 
    the transformResponse option allows you to define a function that will be applied to the response data before it is passed to then or catch handlers. This function can be used to transform the response data in a specific format
   or perform any necessary post-processing.
