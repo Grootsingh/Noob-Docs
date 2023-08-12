@@ -217,8 +217,8 @@ we can use all the AxiosShorthand with Axios Instances.
 
    the transformRequest option allows you to define a function that will be applied to the request data before it is sent to the server. This function can be used to transform the data in a specific format or perform any necessary preprocessing.
 
-  > [!NOTE]
-  > only applicable for request methods 'PUT', 'POST', 'PATCH' and 'DELETE'
+      > [!NOTE]
+      > only applicable for request methods 'PUT', 'POST', 'PATCH' and 'DELETE'
 
 5. `transformResponse: [function (data) {`<br>
    `// Do whatever you want to transform the data`<br>
