@@ -1271,6 +1271,135 @@ Git will retrieve all the files associated with the repository and will copy the
 
 Note: Make sure you are not inside of a repo when you clone!
 
+# Deep Dive into Git Clone (When happens when you clone a repo)
+
+```
+// GitHub
+Main-branch
+                                       main
+                                        ↓
+-----------------------------------------
+       commit-M1      commit-M2     commit-M3
+
+=================================================================
+// git clone (after cloneing the repo to local machine)
+
+// Git
+Main-branch
+                                       Head
+                                        ↓
+                                       main
+                                        ↓
+-----------------------------------------
+       commit-M1      commit-M2     commit-M3
+                                        ↑
+                                   origin/main
+```
+
+when we clone a GitHub repo we get repo + commit history of that repo + <remote>/<branch> pointer.
+
+> let's talk about <remote>/<branch> pointer first.
+
+we have one extra pointer origin/main. this pointer refer to the last commit on the GitHub. when you clone a repo from the gitHub at that time both git main and origin/main will be pointing to the same commit. this indicate that gitHub repo is uptodate to the changes in your git local repo.
+
+as you start adding new commit to the git main branch on every commit you will recive a message "your branch is ahead of 'origin/main' by 1 commit".
+
+```
+// after adding new commit
+// Git
+Main-branch
+                                                       Head
+                                                        ↓
+                                                       main
+                                                        ↓
+---------------------------------------------------------
+       commit-M1      commit-M2     commit-M3      commit-M4
+                                        ↑
+                                   origin/main
+
+```
+
+you can timeTravel back too to check what was the last commit on the Github repo.
+
+```
+git checkout <remotename>/<branchName>
+Ex: git checkout origin/main
+```
+
+this will ofcouse will decapitate your head. you can obsercer and switch back to main again to do your work.
+
+as you can see gitHub does not automatically it's repo in reference to git (local machine) so you need to manually tell github by using git push <remote> <branchName>
+
+> let's talk about repo + commit history
+
+```
+// GitHub repo
+                                     main
+                                       ↓
+-----------------------------------------
+       commit-M1      commit-M2     commit-M3
+                                       |
+                                       ↓
+                                       --------------------------------
+                                                commit-P1           commit-P2
+                                                                       ↑
+                                                               Parallel-Branch
+
+=====================================================================================
+// Git repo after cloning in your local machine
+
+                                       Head
+                                        ↓
+                                       main
+                                        ↓
+-----------------------------------------
+       commit-M1      commit-M2     commit-M3
+                                        ↑
+                                   origin/main
+
+```
+
+Once you've cloned a repository from github, we get all the files and commit history for the project upto github last commit. as you can notice we have cloned a github repo which has more then one branch [main,parallel-branch]. but when i cloned it and open in my local machine. i can only see the main branch.
+
+when you do git branch -v to checkout all the branches that are availiable to access. you will only see one main branch only.
+
+> what's going on here ?
+
+When you clone a Git repository to your local machine, you do have access to all the branches present in the remote repository. However, by default, Git only checks out the default branch (often named "main") after cloning. + create upstream realtionship with the default branch too.
+
+This default behavior helps prevent your local working directory from becoming cluttered with branches you might not need immediately.
+
+if you are cloneing a repo from github then atleast you want to access the main branch so git checks out the default branch for you by default. and leave the other branches for the user to decide if they want to access them in there working directory or not.
+
+you can check all the remote branches
+
+```
+// shows all the remote/gitHub branches availiable in your local machine.
+git branch -r
+
+----------------------------------------------------
+// from our above example
+origin/head -> origin/main
+origin/parallel-branch
+```
+
+you will find it contain all the branchs that are are supposed to be there both the branchs [main,parallel-branch].
+
+you can timetravel too to these branches if you want.
+
+> how to access remote branchs in your local machine
+
+```
+git switch <remoteBranchName>
+ex: git switch parallel-branch
+```
+
+with get switch command you can easily add remote branches in your local working environment. + switch also create upstream realationship (this is switch command feature) by defualt.
+
+now when you check all the branches that are availiable to access in your environment. you will find parallel-branch too.
+
+by the way switch is generally used for switching between branches so if you have a branch in your local machine then you can access it. and this is was actually happening. you have remote branch avaliable in your local machine so it allow you to access it. the difference is that remote branches were not visiable before but as switch to that branch git realize that oh you want to access this branch then let it be avaliable for local environment. and now you can find that branch to be availiable in git branch -v.
+
 ### create an acount on GitHub
 
 after creating account using UserName, Email, Password.
@@ -1571,16 +1700,31 @@ git push
 how to setup upstream realtaionship?
 
 ```
+// seting up upstream for main branch
 git push -u <remoteName> <branchName>
+ex: git push -u origin main
+
+// when you switch to a branch it will create a upstream realtionship automatically
+git switch <branchName>
 ```
+
+there are two ways to setup upstream relation.
+
+1. git push -u
+
+Note: you only need to create a upstream realtionship with main branch manually when you are working on a local repo which later need to send to the github. you don't need to setup upstream realtionship if you have a completly new project which you have created by cloneing a project from the github first before workign on the project in your local machine. becouse when you clone upstream realtion will be automatically be created for the main branch.
 
 The -u flag (or --set-upstream) establishes a link between the local branch and the remote branch, creating a tracking relationship. This means that in the future, you can simply use git push without specifying the remote and branch names, and Git will know where to push your changes.
 
-you just need to setup upstream relationship onces and you can setup upstream for multiple branchs too.
+you just need to setup upstream relationship onces.
 
-Note: you need to setup upstream relationship for multiple branch manually.
+generally you need to create a upstream relationship for the main branch with git push -u.
 
-that GitHub will know which upstream relationship to use based on the branch you are currently on.
+for other branches you can use git switch <branchName> which will automatically create upstream relationship for us.
+
+> how GitHub know which upstream relationship to pick when you have multiple branches?
+
+GitHub will know which upstream relationship to use based on the branch you are currently on.
 
 In your scenario:
 
@@ -1623,10 +1767,215 @@ simply do some work and push that code to github
 git push <remote> <branch>
 ```
 
-or setup a upstream
-
-```
-git push -u <remote> <branch>
-```
-
 and you are good to go.
+
+### Sync your Local repo (git) with Github remote repo.
+
+```
+// GitHub
+
+Main-branch
+                        main
+                          ↓
+---------------------------
+       commit-M1      commit-M2
+
+=========================================================
+// after cloning
+// git
+
+Main-branch
+                        main
+                          ↓
+---------------------------
+       commit-M1      commit-M2
+                          ↑
+                     origin/main
+
+```
+
+this is the setup you have cloned the gitHub repo and started working on the repo in your local machine.
+
+```
+Main-branch
+                                    main
+                                     ↓
+--------------------------------------
+       commit-M1      commit-M2    commit-M3
+                          ↑
+                     origin/main
+
+```
+
+> when local repo get ahead to github repo (sync github repo with local repo)
+
+now you in your local machine your main is 1 commit ahead to the origin/main. you can sync github repo with the local repo with git push. and now github repo is sync with the local repo.
+
+but what if there are multiple people working on the same github repo. and this time your local repo is behind some commit that has been added on the github by other developer?
+
+> when local repo is behind some commit to the GitHub (sync local repo with github repo)
+
+there are two ways to sync your local repo with github repo.
+
+1. fetching
+2. pull
+
+> fetching (Download newly added commits but Don't merge them,place them in remote-traking-branch separatly)
+
+```
+// Before
+// GitHub
+                        main
+                          ↓
+---------------------------
+       commit-M1      commit-M2
+==========================================
+//Git
+                                    main
+                                     ↓
+--------------------------------------
+       commit-M1      commit-M2    commit-M3
+                          ↑
+                     origin/main
+```
+
+now you are ahread one commit.
+
+```
+// after
+// GitHub
+                                                                      main
+                                                                      ↓
+-----------------------------------------------------------------------
+       commit-M1      commit-M2    commit-N1       commit-N2      commit-N3
+
+```
+
+now a new developer comes in and added 3 more commit to the github repo [N1,N2,N3].
+
+your local repo has no idea about the newly added commits.
+
+> how to download new changes?
+
+Note: your local repo don't give you any message about your local repo is one commit behind to the github repo. you have to manually check it out. your local repo only give you message regarding your current possition in reference to last intereaction with the github repo.
+
+```
+// download all the changes from all Branchs from the github.
+git fetch <remote>
+
+// if you are fetching from the origin and has only one remote then you can also use the shorthand
+git fetch
+
+
+// download all the changes from a specific branch
+git fetch <remote> <branchName>
+```
+
+```
+// before
+//Git
+                                    main
+                                     ↓
+--------------------------------------
+       commit-M1      commit-M2    commit-M3
+                          ↑
+                     origin/main
+=========================================================
+// after fetching
+// git
+                                    main
+                                     ↓
+--------------------------------------
+       commit-M1      commit-M2    commit-M3
+                           \
+                            \
+                             -----------------------------------------
+                                   commit-N1       commit-N2      commit-N3
+                                                                      ↑
+                                                                 origin/main
+```
+
+fetching download all the new commits that has been added in your github repo. then add them into remote-branch from the point of last intereaction with the github repo. place all of the new commit on that remote-branch. this allow us to review newly added commits first before deciding to merge them into our curretly working directory. so that there will be no conflict. with the work we are doing currently.
+
+when you first clone a repo. your main-branch and your remote-tracking-branch both are same. and boths pointer points to the same last commit. but when you fetch. the remote-branch diverge from the same path and movie into new direction. and add all the new commit on them. this is becouse remote branch refelect the github repo. and your local repo is reflected by main. both has different code. so not to create conflict and giving you with an opportunity to review the changes fetched from the remote repository before incorporating them into your work. This helps prevent unexpected conflicts or unwanted changes from being merged directly.
+
+> pulling (Download newly added commits and merge them to our current working directory)
+
+```
+// downloading a specific branch from the remote
+git pull <remote> <branch>
+```
+
+pull = fetch + merge
+
+```
+// Before
+// GitHub
+                        main
+                          ↓
+---------------------------
+       commit-M1      commit-M2
+==========================================
+//Git
+                                    main
+                                     ↓
+--------------------------------------
+       commit-M1      commit-M2    commit-M3
+                          ↑
+                     origin/main
+```
+
+now you are ahread one commit.
+
+```
+// after a newdeveloper add new commits to GitHub
+// GitHub
+                                                                      main
+                                                                      ↓
+-----------------------------------------------------------------------
+       commit-M1      commit-M2    commit-N1       commit-N2      commit-N3
+
+```
+
+```
+// before
+//Git
+                                    main
+                                     ↓
+--------------------------------------
+       commit-M1      commit-M2    commit-M3
+                          ↑
+                     origin/main
+=========================================================
+// after pulling
+// step: 1 fetching
+// git
+                                    main
+                                     ↓
+--------------------------------------
+       commit-M1      commit-M2    commit-M3
+                           \
+                            \
+                             -----------------------------------------
+                                   commit-N1       commit-N2      commit-N3
+                                                                      ↑
+                                                                 origin/main
+================================================================================
+// after pulling
+// ste: 2 merge
+// git
+
+// git
+--------------------------
+       commit-M1      commit-M2
+                           \                                                    main
+                            \                                                     ↓
+                             --------------------------------------------------------
+                                   commit-N1       commit-N2      commit-N3    commit-MN
+                                                                                  ↑
+                                                                             origin/main
+```
+
+pulling combine feching and merging into single command.
+
+pulling download all the new commits from the gitHub and then imidiataly add those change by merging into our current working directory. which will create a conflict. and you can reslove the merge depend on the conflict you are having.
