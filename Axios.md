@@ -245,7 +245,7 @@ we can use all the AxiosShorthand with Axios Instances.
    as query parameters. They are separated from the base URL by a question mark (?),
    and multiple parameters are separated by an ampersand (&).
 
-   ex: https://api.example.com/endpoint?param1=value1&param2=value2
+   ex: https://<span></span>api.example.com/endpoint?param1=value1&param2=value2
 
    > [!NOTE]
    > Params that are null or undefined are not rendered in the URL.
