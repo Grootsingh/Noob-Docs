@@ -196,29 +196,34 @@ we can use all the AxiosShorthand with Axios Instances.
 
 ### what keys can config object can take:
 
-1. `url: '/user'` - is the server URL that will be used for the request.
+1. `url: '/user'`
 
-2. `method: 'get', // default` - request method type
+   is the server URL that will be used for the request.
 
-3. `baseURL: 'https://some-domain.com/api'` - `baseURL` will be prepended to `url` unless `url` is absolute.
+3. `method: 'get', // default`
+
+    request method type
+
+5. `baseURL: 'https://some-domain.com/api'`
+
+   `baseURL` will be prepended to `url` unless `url` is absolute.
    It can be convenient to set `baseURL` for an instance of axios to pass
    relative URLs to methods of that instance.
 
-4. `transformRequest: [function (data, headers) {`<br>
-   `    // Do whatever you want to transform the data`<br>
-   `    return data;`<br>
-   `    }]` - the transformRequest option allows you to define a function that will be applied to the request data before it is sent to the server. This function can be used to transform the data in a specific format or perform any necessary preprocessing.
+7. `transformRequest: [function (data, headers) {`<br>
+   `// Do whatever you want to transform the data`<br>
+   ` return data;`<br>
+   `}]`
 
-> [!NOTE]
-> only applicable for request methods 'PUT', 'POST', 'PATCH' and 'DELETE'
+   the transformRequest option allows you to define a function that will be applied to the request data before it is sent to the server. This function can be used to transform the data in a specific format or perform any necessary preprocessing.
+
+  > [!NOTE]
+  > only applicable for request methods 'PUT', 'POST', 'PATCH' and 'DELETE'
 
 5. `transformResponse: [function (data) {`<br>
    `// Do whatever you want to transform the data`<br>
    `return data;`<br>
    `}]`
 
-- the transformResponse option allows you to define a function that will be
-
-  applied to the response data before it is passed to then or catch handlers.
-  This function can be used to transform the response data in a specific format
+   the transformResponse option allows you to define a function that will be applied to the response data before it is passed to then or catch handlers. This function can be used to transform the response data in a specific format
   or perform any necessary post-processing.
