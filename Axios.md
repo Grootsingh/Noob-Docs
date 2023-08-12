@@ -196,15 +196,15 @@ we can use all the AxiosShorthand with Axios Instances.
 
 ### what keys can config object can take:
 
-1. `url: '/user'`<br>
+1. `url: '/user'`
 
    is the server URL that will be used for the request.
 
-2. `method: 'get', // default`<br>
+2. `method: 'get', // default`
 
    request method type
 
-3. `baseURL: 'https://some-domain.com/api'`<br>
+3. `baseURL: 'https://some-domain.com/api'`
 
    `baseURL` will be prepended to `url` unless `url` is absolute.
    It can be convenient to set `baseURL` for an instance of axios to pass
@@ -213,7 +213,7 @@ we can use all the AxiosShorthand with Axios Instances.
 4. `transformRequest: [function (data, headers) {`<br>
    `// Do whatever you want to transform the data`<br>
    ` return data;`<br>
-   `}]`<br>
+   `}]`
 
    the transformRequest option allows you to define a function that will be applied to the request data before it is sent to the server. This function can be used to transform the data in a specific format or perform any necessary preprocessing.
 
@@ -223,16 +223,16 @@ we can use all the AxiosShorthand with Axios Instances.
 5. `transformResponse: [function (data) {`<br>
    `// Do whatever you want to transform the data`<br>
    `return data;`<br>
-   `}]`<br>
+   `}]`
 
    the transformResponse option allows you to define a function that will be applied to the response data before it is passed to then or catch handlers. This function can be used to transform the response data in a specific format
    or perform any necessary post-processing.
 
-6. `headers: {'X-Requested-With': 'XMLHttpRequest'}`<br>
+6. `headers: {'X-Requested-With': 'XMLHttpRequest'}`
 
    Custom header you want to send to the server.
 
-7. `params: {ID: 12345}`<br>
+7. `params: {ID: 12345}`
 
    params are parameter object which store key:value pair which are called
    query parameters which are added after the URL.
@@ -245,7 +245,7 @@ we can use all the AxiosShorthand with Axios Instances.
    as query parameters. They are separated from the base URL by a question mark (?),
    and multiple parameters are separated by an ampersand (&).
 
-   ex: `https://api.example.com/endpoint?param1=value1&param2=value2`
+   ex: https://api.example.com/endpoint?param1=value1&param2=value2
 
    > [!NOTE]
    > Params that are null or undefined are not rendered in the URL.
@@ -268,7 +268,7 @@ we can use all the AxiosShorthand with Axios Instances.
 
 8. `paramsSerializer: function (params) {`<br>
    `return Qs.stringify(params, {arrayFormat: 'brackets'})`<br>
-   `}`<br>
+   `}`
 
    When you make a GET request with Axios, you can pass query parameters
    using the params option. The params option takes an object with key-value
