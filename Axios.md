@@ -1,4 +1,4 @@
-> from the docs:
+> Resource: from the docs:
 
 Axios 1.4.0
 
