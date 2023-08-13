@@ -1231,69 +1231,70 @@ control and flexibility in managing client-server communications.
     `clarifyTimeoutError: false,`<br/>
     `},`</br>
 
-        Transitinal option is use to support the deprecated feature of the axios.
+    Transitinal option is use to support the deprecated feature of the axios.
 
-        In Axios, the transitional option is used to enable or disable transitional
-        behavior when working with deprecated features or behaviors. It allows you
-        to control how Axios handles deprecated functionality and provides a smoother
-        migration path when upgrading to newer versions.
+    In Axios, the transitional option is used to enable or disable transitional
+    behavior when working with deprecated features or behaviors. It allows you
+    to control how Axios handles deprecated functionality and provides a smoother
+    migration path when upgrading to newer versions.
 
-        The transitional option is an object with various properties that can
-        be set to true or false to enable or disable specific transitional behaviors.
+    The transitional option is an object with various properties that can
+    be set to true or false to enable or disable specific transitional behaviors.
 
-        These properties include:
+    These properties include:
 
-        1. silentJSONParsing: When set to true, it disables the warning
-        message when Axios automatically parses JSON responses for non-2xx
-        status codes. This behavior is deprecated, and Axios recommends
-        handling the response manually. By default, it is set to false.
+    1. silentJSONParsing: When set to true, it disables the warning
+       message when Axios automatically parses JSON responses for non-2xx
+       status codes. This behavior is deprecated, and Axios recommends
+       handling the response manually. By default, it is set to false.
 
-        2. forcedJSONParsing: When set to true, it forces Axios to parse
-        JSON responses for all status codes, even if the response does not
-        contain the appropriate Content-Type header. This behavior is
-        deprecated, and Axios recommends handling the response manually.
-        By default, it is set to false.
+    2. forcedJSONParsing: When set to true, it forces Axios to parse
+       JSON responses for all status codes, even if the response does not
+       contain the appropriate Content-Type header. This behavior is
+       deprecated, and Axios recommends handling the response manually.
+       By default, it is set to false.
 
-        3. clarifyTimeoutError: When set to true, it adds additional information
-        to the error message for timeout errors, providing more details about
-        the timeout. By default, it is set to false.
+    3. clarifyTimeoutError: When set to true, it adds additional information
+       to the error message for timeout errors, providing more details about
+       the timeout. By default, it is set to false.
 
-        Here's an example of how to use the transitional option:
+    Here's an example of how to use the transitional option:
 
-        ```js
-        axios.get('/api/data', {
-          transitional: {
-            silentJSONParsing: true,
-            forcedJSONParsing: false,
-            clarifyTimeoutError: false
-          }
-        })
-          .then(response => {
-            // Handle successful response
-          })
-          .catch(error => {
-            // Handle error
-          });
-        ```
+    ```js
+    axios
+      .get("/api/data", {
+        transitional: {
+          silentJSONParsing: true,
+          forcedJSONParsing: false,
+          clarifyTimeoutError: false,
+        },
+      })
+      .then((response) => {
+        // Handle successful response
+      })
+      .catch((error) => {
+        // Handle error
+      });
+    ```
 
-        In the example above, the transitional option is included in the
-        Axios request configuration object. The silentJSONParsing property
-        is set to true to suppress the warning message for automatic JSON
-        parsing, while the other transitional properties are set to their
-        default values.
+    In the example above, the transitional option is included in the
+    Axios request configuration object. The silentJSONParsing property
+    is set to true to suppress the warning message for automatic JSON
+    parsing, while the other transitional properties are set to their
+    default values.
 
-        By using the transitional option, you can customize the behavior of
-        Axios when working with deprecated features. It gives you more control
-        over how Axios handles specific functionalities during the migration
-        process to newer versions or when dealing with specific use cases that
-        require different transitional behaviors.
+    By using the transitional option, you can customize the behavior of
+    Axios when working with deprecated features. It gives you more control
+    over how Axios handles specific functionalities during the migration
+    process to newer versions or when dealing with specific use cases that
+    require different transitional behaviors.
 
-        It's worth noting that transitional behaviors are typically introduced
-        to provide backward compatibility or a smoother migration path, but they
-        may be removed or changed in future versions of Axios. It's recommended
-        to consult the Axios documentation and keep track of any changes or
-        deprecations related to transitional behaviors when upgrading your
-        Axios version.
+    It's worth noting that transitional behaviors are typically introduced
+    to provide backward compatibility or a smoother migration path, but they
+    may be removed or changed in future versions of Axios. It's recommended
+    to consult the Axios documentation and keep track of any changes or
+    deprecations related to transitional behaviors when upgrading your
+    Axios version.
 
 32. `env: {`<br/>
     `// The FormData class to be used to automatically `<br/>`serialize the payload`<br/>
