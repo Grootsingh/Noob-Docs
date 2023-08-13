@@ -4658,7 +4658,7 @@ Another nice way to make sure that your cache is filled by the time it is read i
 
 There are two common approaches to fill a detail cache with data from a list cache:
 
-### `Pull approach (with initialData)`
+### Pull approach (with initialData)
 
 use initialData to provide data from already fetched data (list). pulling out data from other source to provide data to another. if a query have a initalData option then it will look at the initalData option before executing the queryFn.
 
