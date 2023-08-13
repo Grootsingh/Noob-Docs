@@ -1293,37 +1293,38 @@ control and flexibility in managing client-server communications.
     Axios version.
 
 32. `env: {`<br/>
-    `// The FormData class to be used to automatically `<br/>`serialize the payload`<br/>
+    `// The FormData class to be used to automatically serialize the payload`<br/>
     `// into a FormData object`<br/>
     `FormData: window?.FormData || global?.FormData`<br/>
     `},`
 
-        env refer to enviroment in which environment you are using the FromData
+    env refer to enviroment in which environment you are using the FromData
 
-        ```js
-        //formData before serialization
-        const payload = {
-        name: 'John Doe',
-        email: 'john@example.com',
-        age: 25
-        };
-        ```
-        ```js
-        //formData after serialization
-        const formData = new FormData();
-        formData.append('name', payload.name);
-        formData.append('email', payload.email);
-        formData.append('age', payload.age);
-        ```
+    ```js
+    //formData before serialization
+    const payload = {
+      name: "John Doe",
+      email: "john@example.com",
+      age: 25,
+    };
+    ```
 
-        with "FormData: window?.FormData || global?.FormData" this code Axios
-        will automatically serialize our form data which makes it easier to
-        send data over HTTP request.
+    ```js
+    //formData after serialization
+    const formData = new FormData();
+    formData.append("name", payload.name);
+    formData.append("email", payload.email);
+    formData.append("age", payload.age);
+    ```
+
+    with "FormData: window?.FormData || global?.FormData" this code Axios
+    will automatically serialize our form data which makes it easier to
+    send data over HTTP request.
 
 33. `formSerializer: {`<br/>
-    `visitor: (value, key, path, helpers) => {}; //` `custom visitor function to serialize form values`<br/>
-    `dots: boolean; // use dots instead of brackets format`
-    `metaTokens: boolean; // keep special endings like <{} in parameter key`<br/>
+    `visitor: (value, key, path, helpers) => {}; //     custom visitor function to serialize form values`<br/>
+    `dots: boolean; // use dots instead of brackets format`<br/>
+    `metaTokens: boolean; // keep special endings like {} in parameter key`<br/>
     `indexes: boolean; // array indexes format null - no brackets, false - empty brackets, true - brackets with indexes` </br>
     `}`<br/>
 
