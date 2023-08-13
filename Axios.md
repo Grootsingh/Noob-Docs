@@ -284,13 +284,11 @@ we can use all the AxiosShorthand with Axios Instances.
    will be used to serialize the request parameters into a STRING. This string
    will then be appended to the URL.
 
-========================================================
-
 ---
 
-## Side Knowlage URL encoding format
+### Extra: URL encoding format
 
-### before URL encoding format understand URL
+### What is URL
 
 - A URL is another word for a web address.
 
@@ -322,9 +320,9 @@ we can use all the AxiosShorthand with Axios Instances.
    depending on the data type Axios will automatically write the appropiate context-type;
 
    data type = plain text (string) ("text/plain"),<br>
-   JSON (object)("application/json"),<br> URL-encoded form data ({param1: 'value1',param2: 'value2'})
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSON (object)("application/json"),<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;URL-encoded form data ({param1: 'value1',param2: 'value2'})
    ("application/x-www-form-urlencoded"),<br>
-   FormData(new FormData())("multipart/form-data")
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FormData(new FormData())("multipart/form-data")
 
    all the data will be automaticlly serialized before sending to the server.
 
@@ -361,7 +359,7 @@ we can use all the AxiosShorthand with Axios Instances.
     the data, handle URL encoding, and set the appropriate content type header
     based on the request payload.
 
-11. `timeout: 1000, // default is `0` (no timeout)`
+11. `timeout: 1000, // default is 0 (no timeout)`
 
     the timeout option allows you to specify the maximum amount of time
     (in milliseconds) that a request can take before it times out. If the
@@ -676,7 +674,7 @@ we can use all the AxiosShorthand with Axios Instances.
 
 - only for the clint browser
 
-- same but for douwnload.
+- same but for download.
 
 21. `maxContentLength: 2000`
 
@@ -995,8 +993,11 @@ proxy option in Axios.
 3.  `auth`: An optional object that contains the authentication
     credentials for the proxy server. It has the following properties:
 
-        - username: The username for proxy server authentication.
-        - password: The password for proxy server authentication.
+          - username: The username for proxy server authentication.
+          - password: The password for proxy server authentication.
+
+    <br/>
+    <br/>
 
 4.  `protocol`: The protocol used to communicate with the proxy server.
     By default, it is determined based on the requested URL's protocol
@@ -1032,7 +1033,7 @@ axios
 
 ---
 
-### what is proxy?
+### Extra: what is proxy?
 
 A proxy server acts as an intermediary between a client
 and a server, facilitating communication between them. When
@@ -1217,19 +1218,17 @@ control and flexibility in managing client-server communications.
 
 31. `transitional: {`<br/>
     `// silent JSON parsing mode`<br/>
-    `// true - ignore JSON parsing errors and set` `response.data to null if parsing failed (old` `behaviour)`<br/>
-    `// false - throw SyntaxError if JSON parsing` `failed (Note: responseType must be set to 'json')`<br/>
+    `// true - ignore JSON parsing errors and set response.data to null if parsing failed (old behaviour)`<br/>
+    `// false - throw SyntaxError if JSON parsing failed (Note: responseType must be set to 'json')`<br/>
 
-        `silentJSONParsing: true, // default value for the`<br/>
-        `current Axios version`<br/>
-        <br/>
-        `// try to parse the response string as JSON even` `if responseType is not 'json'`<br/>
-
-        `forcedJSONParsing: true,`<br/>
-
+    `silentJSONParsing: true, // default value for the current Axios version`<br/>
     <br/>
-        `// throw ETIMEDOUT error instead of generic` `ECONNABORTED on request timeouts`<br/>
-        `clarifyTimeoutError: false,`<br/>
+    `// try to parse the response string as JSON even if responseType is not 'json'`<br/>
+
+    `forcedJSONParsing: true,`<br/>
+
+    `// throw ETIMEDOUT error instead of generic ECONNABORTED on request timeouts`<br/>
+    `clarifyTimeoutError: false,`<br/>
     `},`</br>
 
         Transitinal option is use to support the deprecated feature of the axios.
@@ -1372,18 +1371,18 @@ control and flexibility in managing client-server communications.
     `100 * 1024 // 100KB/s download limit`<br/>
     `]`
 
-http adapter only (node.js)
+    http adapter only (node.js)
 
-In the array [100 * 1024, 100 * 1024], the first element 100 _ 1024 represents
-the upload limit, and the second element 100 _ 1024 represents the download limit.
-Both values are specified in bytes per second.
+    In the array [100 * 1024, 100 * 1024], the first element 100 _ 1024 represents
+    the upload limit, and the second element 100 _ 1024 represents the download limit.
+    Both values are specified in bytes per second.
 
-By setting these limits, you can control the rate at which data is uploaded and
-downloaded during Axios requests. In this example, the upload and download limits
-are both set to 100KB/s (kilobytes per second). This means that the request will
-be throttled to upload and download data at a maximum rate of 100 kilobytes per second.
+    By setting these limits, you can control the rate at which data is uploaded and
+    downloaded during Axios requests. In this example, the upload and download limits
+    are both set to 100KB/s (kilobytes per second). This means that the request will
+    be throttled to upload and download data at a maximum rate of 100 kilobytes per second.
 
-Throttling the upload and download rates can be useful in scenarios where you
-want to limit bandwidth usage or control the flow of data in your application.
-By specifying these limits, you can prevent excessive data transfers and ensure
-a smoother data transmission experience.
+    Throttling the upload and download rates can be useful in scenarios where you
+    want to limit bandwidth usage or control the flow of data in your application.
+    By specifying these limits, you can prevent excessive data transfers and ensure
+    a smoother data transmission experience.
