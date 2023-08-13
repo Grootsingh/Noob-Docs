@@ -1525,19 +1525,19 @@ instance.defaults.headers.common["Authorization"] = AUTH_TOKEN;
 ### order of precedence
 
 ```
-// highest precidence| Override timeout to 5 sec               ^
+// highest precidence| Override timeout to 5 sec               ↑
 instance.get('/longRequest', {                                 |
   timeout: 5000                                                |
 });                                                            |
-                                                               ^
+                                                               ↑
 // Override timeout to 3 sec                                   |
 instance.defaults.timeout = 3000;                              |
-                                                               ^
+                                                               ↑
 // create an instance where timeout is 2 sec                   |
 const instance = axios.create({                                |
    timeout: 2000                                               |
 });                                                            |
-                                                               ^
+                                                               ↑
 // lowest precedence| create a default time to 1 sec           |
 axios.defaults.timeout = 1000;                                 |
 ```
@@ -1763,12 +1763,10 @@ catch will catch the error and block the execution.
    it means an error occurred during the request setup, such as a
    network failure or CORS issue.
 
-### Note
+   Note: error.response object entire schema of response which contain all the property that
+   was sent by the server for the browser user.
 
-error.response object entire schema of response which contain all the property that
-was sent by the server for the browser user.
-
-### Error handleing with validateStatus
+## Error handleing with validateStatus
 
 you can configer the validateStatus . if the validateStatus return true it mean request successful if false then request false.
 
@@ -1780,7 +1778,7 @@ axios.get("/user/12345", {
 });
 ```
 
-### Using toJSON you get an object with more information about the HTTP error.
+## Using toJSON you get an object with more information about the HTTP error.
 
 ```js
 axios.get('/user/12345')
@@ -1799,7 +1797,7 @@ Erroe.JSON() will return an object which contain standardized way to extract
 essential information from the error object and convert it to a JSON format.
 you can use it to display a customized error with greater details.
 
-### Cancelling requests in Axios?
+## Cancelling requests in Axios?
 
 you can use AbortController to cancel request.
 
