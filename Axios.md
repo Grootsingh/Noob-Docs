@@ -1569,24 +1569,27 @@ Axios provides two types of interceptors:
     be useful for implementing features like automatic token
     refresh or adding common headers to every request.
 
-        Here's an example of adding a request interceptor:
+    Here's an example of adding a request interceptor:
 
-        ```js
-        axios.interceptors.request.use(config => {
-          // Modify the request config
-          config.headers['Authorization'] = 'Bearer your_token_here';
-          return config;
-        }, error => {
-          // Handle request error
-          return Promise.reject(error);
-        });
-        ```
+    ```js
+    axios.interceptors.request.use(
+      (config) => {
+        // Modify the request config
+        config.headers["Authorization"] = "Bearer your_token_here";
+        return config;
+      },
+      (error) => {
+        // Handle request error
+        return Promise.reject(error);
+      }
+    );
+    ```
 
-        In this example, the axios.interceptors.request.use function
-          adds a request interceptor. The provided function receives the
-          request config object and can modify it as needed. It then
-          returns the modified config or a new config object. You can also
-          handle errors that occur DURING THE INTERCEPTION PROCESS.
+    In this example, the axios.interceptors.request.use function
+    adds a request interceptor. The provided function receives the
+    request config object and can modify it as needed. It then
+    returns the modified config or a new config object. You can also
+    handle errors that occur DURING THE INTERCEPTION PROCESS.
 
 2.  Response interceptors: Response interceptors are functions
     that are executed after a response is received from the server
@@ -1781,11 +1784,12 @@ axios.get("/user/12345", {
 ## Using toJSON you get an object with more information about the HTTP error.
 
 ```js
-axios.get('/user/12345')
-  .catch(function (error) {
-    console.log(error.toJSON());
-  });
---------------------------------------
+axios.get("/user/12345").catch(function (error) {
+  console.log(error.toJSON());
+});
+```
+
+```js
 {
   "message": "Request failed with status code 404",
   "name": "Error",
