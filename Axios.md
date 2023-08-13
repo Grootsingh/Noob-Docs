@@ -1384,3 +1384,459 @@ control and flexibility in managing client-server communications.
     want to limit bandwidth usage or control the flow of data in your application.
     By specifying these limits, you can prevent excessive data transfers and ensure
     a smoother data transmission experience.
+
+=====================================================
+
+### Response Schema
+
+the response that you get from the server contain there informations.
+
+1.  `data: {}`
+
+    `data` is the response that was provided by the server.
+
+2.  `status: 200`
+
+    `status` is the HTTP status code from the server response.
+
+3.  `statusText: 'OK'`
+
+    `statusText` is the HTTP status message from the server response.
+
+4.  `headers: {}`
+
+    `headers` the HTTP headers that the server responded with
+
+    All header names are lower cased and can be accessed using
+    the bracket notation.
+
+    Example: `response.headers['content-type']`
+
+5.  `config: {}`
+
+    `config` is the config that was provided to `axios` for the
+    request (config request that you have sent)
+
+    config is used when using an instance.
+
+    ```js
+    const instance = axios.create({
+      baseURL: "https://api.example.com",
+      timeout: 5000,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    instance
+      .get("/users")
+      .then((response) => {
+        // Handle the response
+      })
+      .catch((error) => {
+        // Handle any errors
+      });
+    ```
+
+    config object all the key value that you have used to make the
+    request by instance
+
+6.  `request: {}`
+
+    request object is same as config object but it is for single request.
+
+    ```js
+    axios({
+      url: "/api/users",
+      method: "GET",
+      params: {
+        page: 1,
+        limit: 10,
+      },
+    })
+      .then((response) => {
+        // Handle the response
+      })
+      .catch((error) => {
+        // Handle any errors
+      });
+    ```
+
+    request object all the key value that you have used to make the request
+    by individual request
+
+### Config Defaults
+
+In Axios, you can set global defaults for all Axios requests by
+using the axios.defaults object. This allows you to define default
+configuration options that will be applied to every request made
+through Axios.
+
+```
+1. axios.defaults.baseURL = 'https://api.example.com';
+2. axios.defaults.headers.common['Authorization'] = 'Bearer your_token_here';(common return undefined)
+3. axios.defaults.headers['Authorization'] = 'Bearer your_token_here';
+4. axios.defaults.timeout = 5000;
+
+2 and 3 are same
+```
+
+By setting these defaults, you don't have to specify them for each
+individual request. However, you can still override these defaults
+on a per-request basis by providing specific configuration options
+when making a request.
+
+It's important to note that axios.defaults is a mutable object, so
+any changes made to it will affect all subsequent Axios requests.
+This can be useful for setting common headers, default URLs, or
+timeouts across your application.
+
+### Custom instance
+
+you can create an Axios instance with custom defaults using the
+axios.create() method. This allows you to have different sets
+of defaults for different parts of your application.
+
+```js
+const instance = axios.create({
+  baseURL: "https://api.example.com",
+  timeout: 5000,
+  headers: {
+    Authorization: "Bearer your_token_here",
+  },
+});
+```
+
+### Alter Custom Instance
+
+you can add or overwrite custom instance properties by
+instance.defaults object
+
+```js
+// Set config defaults when creating the instance
+const instance = axios.create({
+  baseURL: "https://api.example.com",
+});
+
+// Alter defaults after instance has been created
+instance.defaults.headers.common["Authorization"] = AUTH_TOKEN;
+```
+
+### order of precedence
+
+```
+// highest precidence| Override timeout to 5 sec               ^
+instance.get('/longRequest', {                                 |
+  timeout: 5000                                                |
+});                                                            |
+                                                               ^
+// Override timeout to 3 sec                                   |
+instance.defaults.timeout = 3000;                              |
+                                                               ^
+// create an instance where timeout is 2 sec                   |
+const instance = axios.create({                                |
+   timeout: 2000                                               |
+});                                                            |
+                                                               ^
+// lowest precedence| create a default time to 1 sec           |
+axios.defaults.timeout = 1000;                                 |
+```
+
+The configuration options passed directly to the request
+method (axios.get(), axios.post(), etc.) take the
+highest precedence.
+
+axios.default has the lowest precedence.
+
+### Axios interceptors
+
+Axios interceptors are functions that allow you to intercept
+and manipulate HTTP requests and responses before they are
+handled by your application's code. Interceptors are a powerful
+feature of Axios that enable you to add global request/response
+handling logic, such as modifying headers, logging,
+error handling, and more.
+
+Note: Intercepter are async by default
+
+Axios provides two types of interceptors:
+
+1.  Request interceptors: Request interceptors are functions
+    that are executed before the request is sent to the server.
+    You can use request interceptors to modify the request
+    configuration, add headers, handle authentication, or perform
+    any other pre-request manipulation. Request interceptors can
+    be useful for implementing features like automatic token
+    refresh or adding common headers to every request.
+
+        Here's an example of adding a request interceptor:
+
+        ```js
+        axios.interceptors.request.use(config => {
+          // Modify the request config
+          config.headers['Authorization'] = 'Bearer your_token_here';
+          return config;
+        }, error => {
+          // Handle request error
+          return Promise.reject(error);
+        });
+        ```
+
+        In this example, the axios.interceptors.request.use function
+          adds a request interceptor. The provided function receives the
+          request config object and can modify it as needed. It then
+          returns the modified config or a new config object. You can also
+          handle errors that occur DURING THE INTERCEPTION PROCESS.
+
+2.  Response interceptors: Response interceptors are functions
+    that are executed after a response is received from the server
+    but before it's passed to the application code. Response
+    interceptors allow you to globally handle and manipulate the
+    response data or perform any other post-response processing.
+    Response interceptors can be used, for example, to handle
+    common error responses or format data consistently.
+
+    Here's an example of adding a response interceptor:
+
+    ```js
+    axios.interceptors.response.use(
+      (response) => {
+        // Modify the response data
+        response.data = response.data.toUpperCase();
+        return response;
+      },
+      (error) => {
+        // Handle response error
+        return Promise.reject(error);
+      }
+    );
+    ```
+
+    In this example, the axios.interceptors.response.use function adds
+    a response interceptor. The provided function receives the response
+    object and can modify it as needed. It then returns the modified
+    response or a new response object. You can also handle errors that
+    occur DURING THE INTERCEPTION PROCESS.
+
+    You can add multiple interceptors by calling the
+    axios.interceptors.request.use or axios.interceptors.response.use
+    functions multiple times. The interceptors will be executed
+    in the order they were added.
+
+    Interceptors are powerful for handling global request and response
+    behavior in a centralized manner. They allow you to abstract common
+    logic, reduce code duplication, and provide consistent behavior
+    across your application's HTTP requests.
+
+#### If you need to remove an interceptor later you can.
+
+```js
+const myInterceptor = axios.interceptors.request.use(function () {
+  /*...*/
+});
+axios.interceptors.request.eject(myInterceptor);
+```
+
+#### You can also clear all interceptors for requests or responses.
+
+```js
+const instance = axios.create();
+instance.interceptors.request.use(function () {
+  /*...*/
+});
+instance.interceptors.request.clear(); // Removes interceptors from requests
+```
+
+#### You can add interceptors to a custom instance of axios.
+
+```js
+const instance = axios.create();
+instance.interceptors.request.use(function () {
+  /*...*/
+});
+```
+
+## You can make interception sync
+
+When you add request interceptors, they are presumed to be asynchronous
+by default. This can cause a delay in the execution of your axios request
+when the main thread is blocked (a promise is created under the hood for
+the interceptor and your request gets put on the bottom of the call stack).
+If your request interceptors are synchronous you can add a flag to the
+options object that will tell axios to run the code synchronously and
+avoid any delays in request execution.
+
+```js
+axios.interceptors.request.use(
+  function (config) {
+    config.headers.test = "I am only a header!";
+    return config;
+  },
+  null,
+  { synchronous: true }
+);
+```
+
+## Run intercepter conditionaly
+
+If you want to execute a particular interceptor based on a runtime check,
+you can add a runWhen function to the options object. The interceptor will
+not be executed if and only if the return of runWhen is false. The function
+will be called with the config object (don't forget that you can bind your
+own arguments to it as well.) This can be handy when you have an asynchronous
+request interceptor that only needs to run at certain times.
+
+```js
+function onGetCall(config) {
+  return config.method === "get";
+}
+axios.interceptors.request.use(
+  function (config) {
+    config.headers.test = "special get headers";
+    return config;
+  },
+  null,
+  { runWhen: onGetCall }
+);
+```
+
+## Handling Errors in Axios
+
+there are mutiple methods to handle errors.
+
+1. Using .then( response => {}) and .catch(error => {}):
+
+catch will catch the error and block the execution.
+
+2. Using try-catch with async/await
+
+   ```js
+   try {
+     const response = await axios.get("/api/data");
+     // Handle successful response
+   } catch (error) {
+     // Handle error
+   }
+   ```
+
+3. Custom error handling with response status codes:
+
+   the default behavior is to reject every response that returns
+   with a status code that falls out of the range of 2xx and treat
+   it as an error.
+
+   ```js
+   axios
+     .get("/api/data")
+     .then((response) => {
+       // Handle successful response
+     })
+     .catch((error) => {
+       if (error.response) {
+         // The request was made and the server responded with a status code
+         // that falls outside the range of 2xx
+         console.log(error.response.data);
+         console.log(error.response.status);
+         console.log(error.response.headers);
+       } else if (error.request) {
+         // The request was made but no response was received
+         console.log(error.request);
+       } else {
+         // Something happened in setting up the request that triggered an error
+         console.log("Error", error.message);
+       }
+     });
+   ```
+
+   the error object provides additional information about the error.
+
+   If error.response exists, it means the request was made and the
+   server responded with a status code outside the range of 2xx.
+   You can access the response data, status code, and headers from
+   error.response.
+
+   If error.request exists, it means the request was
+   made but no response was received. You can access the request
+   details from error.request.
+
+   If none of these properties exist,
+   it means an error occurred during the request setup, such as a
+   network failure or CORS issue.
+
+### Note
+
+error.response object entire schema of response which contain all the property that
+was sent by the server for the browser user.
+
+### Error handleing with validateStatus
+
+you can configer the validateStatus . if the validateStatus return true it mean request successful if false then request false.
+
+```js
+axios.get("/user/12345", {
+  validateStatus: function (status) {
+    return status < 500; // Resolve only if the status code is less than 500
+  },
+});
+```
+
+### Using toJSON you get an object with more information about the HTTP error.
+
+```js
+axios.get('/user/12345')
+  .catch(function (error) {
+    console.log(error.toJSON());
+  });
+--------------------------------------
+{
+  "message": "Request failed with status code 404",
+  "name": "Error",
+  "stack": "<stack trace goes here>"
+}
+```
+
+Erroe.JSON() will return an object which contain standardized way to extract
+essential information from the error object and convert it to a JSON format.
+you can use it to display a customized error with greater details.
+
+### Cancelling requests in Axios?
+
+you can use AbortController to cancel request.
+
+you can use AbortController two ways.
+
+1. with user interection.
+
+   when user click or leave the page.
+
+   ```js
+   const controller = new AbortController();
+
+   axios
+     .get("/foo/bar", {
+       signal: controller.signal,
+     })
+     .then(function (response) {
+       //...
+     });
+   // cancel the request
+   controller.abort();
+   ```
+
+   execute controller.abort() with an event.
+
+2. with timeout.
+
+   when the time is up the request will be canceled/Aborted
+
+   ```js
+   axios
+     .get("/foo/bar", {
+       signal: AbortSignal.timeout(5000), //Aborts request after 5 seconds
+     })
+     .then(function (response) {
+       //...
+     });
+   ```
+
+   Note: there is no need to create new AbortController() with AbortSignal.timeout(time in mili sec)
