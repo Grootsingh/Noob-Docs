@@ -1525,7 +1525,7 @@ instance.defaults.headers.common["Authorization"] = AUTH_TOKEN;
 ### order of precedence
 
 ```
-// highest precidence| Override timeout to 5 sec               ^
+// highest precidence| Override timeout to 5 sec               ↑
 instance.get('/longRequest', {                                 |
   timeout: 5000                                                |
 });                                                            |
