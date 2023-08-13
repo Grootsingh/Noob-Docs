@@ -1220,13 +1220,9 @@ control and flexibility in managing client-server communications.
     `// silent JSON parsing mode`<br/>
     `// true - ignore JSON parsing errors and set response.data to null if parsing failed (old behaviour)`<br/>
     `// false - throw SyntaxError if JSON parsing failed (Note: responseType must be set to 'json')`<br/>
-
     `silentJSONParsing: true, // default value for the current Axios version`<br/>
-    <br/>
     `// try to parse the response string as JSON even if responseType is not 'json'`<br/>
-
     `forcedJSONParsing: true,`<br/>
-
     `// throw ETIMEDOUT error instead of generic ECONNABORTED on request timeouts`<br/>
     `clarifyTimeoutError: false,`<br/>
     `},`</br>
