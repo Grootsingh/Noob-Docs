@@ -2239,18 +2239,18 @@ so there is a simpler sintex you can use to create your markDown files. which la
 
 ### Basic syntex
 
-| Element         | Markdown Syntax                                  |
-| --------------- | ------------------------------------------------ |
-| Heading         | \# H1<br>\## H2<br>\### H3                       |
-| Bold            | \*\*bold text\*\*                                |
-| Italic          | \*italicized text\*                              |
-| Blockquote      | \> blockquote                                    |
-| Ordered List    | 1. First item<br>2. Second item<br>3. Third item |
-| Unordered List  | - First item<br>- Second item<br>- Third item    |
-| Code            | \`code\`                                         |
-| Horizontal Rule | \-\-\-                                           |
+| Element         | Markdown Syntax                                                    |
+| --------------- | ------------------------------------------------------------------ |
+| Heading         | \# H1<br>\## H2<br>\### H3                                         |
+| Bold            | \*\*bold text\*\*                                                  |
+| Italic          | \*italicized text\*                                                |
+| Blockquote      | \> blockquote                                                      |
+| Ordered List    | 1. First item<br>2. Second item<br>3. Third item                   |
+| Unordered List  | - First item<br>- Second item<br>- Third item                      |
+| Code            | \`code\`                                                           |
+| Horizontal Rule | \-\-\-                                                             |
 | Link            | \[title](https://<span></span>w<span>ww.<span></span>example.com)` |
-| Image           | \!\[alt text](image.jpg)                         |
+| Image           | \!\[alt text](image.jpg)                                           |
 
 ---
 
@@ -2264,7 +2264,7 @@ Markdown applications support these elements.
 | Table                                    | \| Syntax \| Description \|<br>\| ------ \| ----------- \|<br>\| Header \| Title \|<br>\| Paragraph \| Text \|                                  |
 | Fenced Code Block                        | \`\`\`<br>{<br>&nbsp;&nbsp;&nbsp;"firstName": "John",<br>&nbsp;&nbsp;&nbsp;"lastName": "Smith",<br>&nbsp;&nbsp;&nbsp;"age": 25<br>}<br>\`\`\`   |
 | Fenced Code Block With color coated code | \`\`\`js<br>{<br>&nbsp;&nbsp;&nbsp;"firstName": "John",<br>&nbsp;&nbsp;&nbsp;"lastName": "Smith",<br>&nbsp;&nbsp;&nbsp;"age": 25<br>}<br>\`\`\` |
-| Footnote                                 | Here's a sentence with a footnote. [^1]<br>[^1]: This is the footnote.                                                                          |
+| difference    | \`\`\`diff<br>{<br>&nbsp;&nbsp;&nbsp;"firstName": "John",<br>&nbsp;&nbsp;&nbsp;"lastName": "Smith",<br>&nbsp;&nbsp;&nbsp;"age": 25<br>}<br>\`\`\` | Footnote                                 | Here's a sentence with a footnote. [^1]<br>[^1]: This is the footnote.                                                                          |
 | Heading                                  | ID ### My Great Heading {#custom-id}                                                                                                            |
 | Definition                               | List term<br>: definition                                                                                                                       |
 | Strikethrough                            | ∼∼The world is flat.∼∼                                                                                                                          |
@@ -2278,7 +2278,7 @@ Markdown applications support these elements.
 | --------------------- | --------------------------------------------------------------------- |
 | Convert URL to String | \<span>\</span><br> Ex: https://\<span>\</span>markdown-it.github.io/ |
 | Add Empty Space       | \&nbsp;                                                               |
-
+ 
 ---
 
 You can visit: [Markdown-it](https://markdown-it.github.io/) for better markdown syntex understanding.

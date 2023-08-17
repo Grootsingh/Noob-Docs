@@ -1,127 +1,125 @@
-### 1. Context-Module-pattern
+# 1. Context-Module-pattern
 
 to understand we have to go through an ex:
 
-```
+```js
 // src/context/counter.js
 
-- created a context
+//created a context
 
-const CounterContext = React.createContext()
+const CounterContext = React.createContext();
 
-
-function CounterProvider({step = 1, initialCount = 0, ...props}) {
-
-- create a reducer
+function CounterProvider({ step = 1, initialCount = 0, ...props }) {
+  //create a reducer
 
   const [state, dispatch] = React.useReducer(
     (state, action) => {
-      const change = action.step ?? step
+      const change = action.step ?? step;
       switch (action.type) {
-        case 'increment': {
-          return {...state, count: state.count + change}
+        case "increment": {
+          return { ...state, count: state.count + change };
         }
-        case 'decrement': {
-          return {...state, count: state.count - change}
+        case "decrement": {
+          return { ...state, count: state.count - change };
         }
         default: {
-          throw new Error(`Unhandled action type: ${action.type}`)
+          throw new Error(`Unhandled action type: ${action.type}`);
         }
       }
     },
-    {count: initialCount},
-  )
+    { count: initialCount }
+  );
 
-- we are providing reducer state and dispatch function directily to the childrens
+  // we are providing reducer state and dispatch function directily to the childrens
 
-  const value = [state, dispatch]
-  return <CounterContext.Provider value={value} {...props} />
+  const value = [state, dispatch];
+  return <CounterContext.Provider value={value} {...props} />;
 }
 
-- just a context value checker
+// just a context value checker
 
 function useCounter() {
-  const context = React.useContext(CounterContext)
+  const context = React.useContext(CounterContext);
   if (context === undefined) {
-    throw new Error(`useCounter must be used within a CounterProvider`)
+    throw new Error(`useCounter must be used within a CounterProvider`);
   }
-  return context
+  return context;
 }
 
-export {CounterProvider, useCounter}
+export { CounterProvider, useCounter };
+
+//-----------------------------------------------------
 // src/screens/counter.js
-- here we are using reducer that we have passed throught the context value
-import {useCounter} from 'context/counter'
+
+// here we are using reducer that we have passed throught the context value
+import { useCounter } from "context/counter";
 
 function Counter() {
-  const [state, dispatch] = useCounter()
+  const [state, dispatch] = useCounter();
 
-- here we have to use dispatch to give action to our reducer to do the task?
-- here is the problem that we are going to solve?-------
+  // here we have to use dispatch to give action to our reducer to do the task?
+  // here is the problem that we are going to solve?-------
 
-  const increment = () => dispatch({type: 'increment'})
-  const decrement = () => dispatch({type: 'decrement'})
+  const increment = () => dispatch({ type: "increment" });
+  const decrement = () => dispatch({ type: "decrement" });
   return (
     <div>
       <div>Current Count: {state.count}</div>
       <button onClick={decrement}>-</button>
       <button onClick={increment}>+</button>
     </div>
-  )
+  );
 }
+//-----------------------------------------------------
 // src/index.js
-import {CounterProvider} from 'context/counter'
-import Counter from 'screens/counter'
+import { CounterProvider } from "context/counter";
+import Counter from "screens/counter";
 
 function App() {
   return (
     <CounterProvider>
       <Counter />
     </CounterProvider>
-  )
+  );
 }
-
 ```
 
-# Problem with this simple approch?
+## Problem with this simple approch?
 
 - when you have a sequence of dispatch functions.
 
-it becomes t-di-us when you have to re-peat the sequence at multiple places.
+it becomes t-di-us when you have to repeat the sequence at multiple places.
 which become more error pron becouse dispatch take action string;
 
-# temp solution is to use a healper function to incapsulate the dispatch
+## temp solution is to use a healper function to incapsulate the dispatch
 
-```
+```js
 // src/context/counter.js
 
-- created a context
+// created a context
 
-const CounterContext = React.createContext()
+const CounterContext = React.createContext();
 
+function CounterProvider({ step = 1, initialCount = 0, ...props }) {
+  // create a reducer
 
-function CounterProvider({step = 1, initialCount = 0, ...props}) {
+  const increment = React.useCallback(
+    () => dispatch({ type: "increment" }),
+    [dispatch]
+  );
+  const decrement = React.useCallback(
+    () => dispatch({ type: "decrement" }),
+    [dispatch]
+  );
 
-- create a reducer
+  // here we are sending increment, decrement helper fn rather then sending dispatch directly. we are incapsulating the dispatch (sequence) and send the healper.
 
-const increment = React.useCallback(
-  () => dispatch({type: 'increment'}),
-  [dispatch],
-)
-const decrement = React.useCallback(
-  () => dispatch({type: 'decrement'}),
-  [dispatch],
-)
-
-- here we are sending increment, decrement helper fn rather then sending dispatch
-  directly. we are incapsulating the dispatch (sequence) and send the healper.
-
-const value = {state, increment, decrement}
-return <CounterContext.Provider value={value} {...props} />
+  const value = { state, increment, decrement };
+  return <CounterContext.Provider value={value} {...props} />;
 }
 // now users can consume it like this:
 
-const {state, increment, decrement} = useCounter()
+const { state, increment, decrement } = useCounter();
 ```
 
 here the problem is solved, healper fn do the job write but for creating healper
@@ -129,11 +127,11 @@ fn we need to use useCallback hook so the hook don't re-render. still on every
 render react will do comapre the depandency of useCallback hook. which can be
 saved by simply useing heaper + Modules.
 
-### Context + (Heaper Fn + Modules) = Context Module Pattern
+## Context + (Heaper Fn + Modules) = Context Module Pattern
 
-// final solution
+> final solution
 
-```
+```js
 
 // src/context/counter.js
 const CounterContext = React.createContext()
@@ -170,14 +168,11 @@ function useCounter() {
   return context
 }
 
-- here we are creating healper fn in open not inside CounterProvider fn
-  and export these helper fn with export and import modules which saves us un-nessesory
-  useCallback depandency check on every re-render of CounterProvider fn.
+// here we are creating healper fn in open not inside CounterProvider fn and export these helper fn with export and import modules which saves us un-nessesory useCallback depandency check on every re-render of CounterProvider fn.
 
-- in helper fn we are taking dispatch fn as a argument and inside helper we
-  provide the dispatch it's argunment.
+// in helper fn we are taking dispatch fn as a argument and inside helper we provide the dispatch it's argunment.
 
-- before that we are taking distach and it's argunment (complete) as a argunment.
+// before that we are taking distach and it's argunment (complete) as a argunment.
 
 const increment = dispatch => dispatch({type: 'increment'})
 const decrement = dispatch => dispatch({type: 'decrement'})
@@ -188,10 +183,11 @@ const decrement = dispatch => dispatch({type: 'decrement'})
               decrease: decrease(dispatch)
             }
 
-- helps us reducer errors and makes the encapsulation of the component more flexible.
+// helps us reducer errors and makes the encapsulation of the component more flexible.
 
 
 export {CounterProvider, useCounter, increment, decrement}
+//------------------------------------------------------
 // src/screens/counter.js
 import {useCounter, increment, decrement} from 'context/counter'
 
@@ -208,8 +204,9 @@ function Counter() {
 
 ```
 
-- summerly: create a component with Context + (Heaper Fn + Modules) + reducer
-  and export
+### summerly:
+
+`create a component with Context + (Heaper Fn + Modules) + reducer and export`
 
 1.  Contextproivder to wrap the component.
 2.  Context Value will be reducer [state,dispatch]
@@ -219,7 +216,7 @@ function Counter() {
 
 ---
 
-### 2. Compound Components
+# 2. Compound Components
 
 subTopic you need to learn before understanding Compound Component.
 
@@ -260,7 +257,7 @@ mrthods are:
 6. React.isValidElement(object): This method returns true if the specified
    object is a valid React element.
 
-Note that these methods are part of the React.Children namespace, so they need
+Note: that these methods are part of the React.Children namespace, so they need
 to be accessed using React.Children.methodName().
 
 - fist parameter "Children" is the children props which we use in
@@ -275,7 +272,7 @@ to be accessed using React.Children.methodName().
   too.(Optional) (was required in class based react app, you can igonre it in
   function based)
 
-# why use Children Api methods when you can directly use Array Methods over child props
+## why use Children Api methods when you can directly use Array Methods over child props
 
 - The React.Children.map() method can handle both single child elements and
   arrays of child elements, while the children.map() method can only handle
@@ -294,25 +291,25 @@ starting point.
 
 const clonedElement = cloneElement(element, props, ...children)
 
-# Parameters
+## Parameters
 
-1. element: The element argument must be a valid React element. For example, it
+1. `element`: The element argument must be a valid React element. For example, it
    could be a JSX node like <Something />, the result of calling createElement,
    or the result of another cloneElement call.
 
-2. props: The props argument must either be an object or null. If you pass null,
+2. `props`: The props argument must either be an object or null. If you pass null,
    the cloned element will retain all of the original element.props. Otherwise,
    for every prop in the props object, the returned element will “prefer” the
    value from props over the value from element.props. The rest of the props
    will be filled from the original element.props. If you pass props.key or
    props.ref, they will replace the original ones.
 
-3. optional ...children: Zero or more child nodes. They can be any React nodes,
+3. `optional ...children`: Zero or more child nodes. They can be any React nodes,
    including React elements, strings, numbers, portals, empty nodes (null,
    undefined, true, and false), and arrays of React nodes. If you don’t pass any
    ...children arguments, the original element.props.children will be preserved.
 
-# Returns
+## Returns
 
 cloneElement returns a React element object with a few properties:
 
@@ -326,14 +323,16 @@ Usually, you’ll return the element from your component or make it a child of
 another element. Although you may read the element’s properties, it’s best to
 treat every element as opaque after it’s created, and only render it.
 
-# My observation
+## My observation
 
 as we know when we create an element with createElement in react it return an
 object
 
-React.createElement(type,props,children)
-
+```js
+React.createElement(type, props, children);
 ```
+
+```js
 <div id="root">Hello world</div>
 {
   type: "div",
@@ -348,21 +347,20 @@ React.createElement(type,props,children)
 so when we clone an element we take the same component type and either add or
 replace props and overWrite children
 
-```
-ex: import { cloneElement } from 'react';
+```js
+//ex:
+import { cloneElement } from "react";
 
 const clonedElement = cloneElement(
-  <Row title="Cabbage">
-    Hello
-  </Row>,
+  <Row title="Cabbage">Hello</Row>,
   { isHighlighted: true },
-  'Goodbye'
+  "Goodbye"
 );
 ```
 
-- previous element/component = <Row title="Cabbage"> Hello </Row>
+- previous element/component = <Row<span></span> title="Cabbage"> Hello </Row<span></span>>
 
-```
+```js
 Row = {
 type: ƒ Row() {}
 key: null
@@ -380,7 +378,7 @@ _store: Object
 - new Props = { isHighlighted: true }
 - new Children = 'Goodbye'
 
-```
+```js
 new Row/Cloned Row = {
    type: ƒ Row() {}
 key: null
@@ -401,7 +399,7 @@ _store: Object
 
 - this is normal this is how an object works in javascript.
 
-# Note
+## Note
 
 - Using cloneElement is uncommon and can lead to fragile code.
 
@@ -410,7 +408,7 @@ harder to keep track of the data flow. which makes it hard to debugg your code.
 
 ---
 
-### now underStand Compound component
+## now underStand Compound component
 
 Compound components is a design pattern in React that allows you to create a set
 of components that work together to achieve a common goal ( to create a utility
@@ -430,43 +428,45 @@ compound component to manage the details.
 
 lets take an ex: to understand Compound component.
 
-```
-import * as React from 'react'
-import {Switch} from '../switch'
+```js
+import * as React from "react";
+import { Switch } from "../switch";
 
-- Parent Component (manage all the States at top level and share them implicitly to it's children )
+// Parent Component (manage all the States at top level and share them implicitly to it's children )
 
-function Toggle({children}) {
-  const [on, setOn] = React.useState(false)
-  const toggle = () => setOn(!on)
+function Toggle({ children }) {
+  const [on, setOn] = React.useState(false);
+  const toggle = () => setOn(!on);
 
-- we are usinng React.Children.map to itr over all of the children of the Parent Component
-- Parent Component = fn Toggle
-- children Component = [ToggleOn, ToggleOff, ToggleButton]
-- we are using React.cloneElement to pass the props to all the childrens implicitly
-- props = {on, toggle}
+  // we are usinng React.Children.map to itr over all of the children of the Parent Component
 
-  return React.Children.map(children, child => {
-    let newChild = React.cloneElement(child, {on, toggle})
-    return newChild
-  })
+  // Parent Component = fn Toggle
+
+  // children Component = [ToggleOn, ToggleOff, ToggleButton]
+
+  // we are using React.cloneElement to pass the props to all the childrens implicitly
+
+  // props = {on, toggle}
+
+  return React.Children.map(children, (child) => {
+    let newChild = React.cloneElement(child, { on, toggle });
+    return newChild;
+  });
 }
 
-// ToggleOn, ToggleOff, ToggleButton are Children component you can see in APP component
-they are nested in the Toggle (parent) componet.
+// ToggleOn, ToggleOff, ToggleButton are Children component you can see in APP component they are nested in the Toggle (parent) componet.
 
-- here in all the chidlren we are accessing the props that we have shared from the parent to
-the childrens.
-- props were = {on, toggle}
+// here in all the chidlren we are accessing the props that we have shared from the parent to the childrens.
 
-const ToggleOn = ({on, children}) => (on ? children : null)
+// props were = {on, toggle}
 
-const ToggleOff = ({on, children}) => (on ? null : children)
+const ToggleOn = ({ on, children }) => (on ? children : null);
 
-const ToggleButton = ({on, toggle}) => <Switch on={on} onClick={toggle} />
+const ToggleOff = ({ on, children }) => (on ? null : children);
 
-- whatever you put between Toggle component it becomes a child of the Toggle and those
-  props will automaticly be shared with them.
+const ToggleButton = ({ on, toggle }) => <Switch on={on} onClick={toggle} />;
+
+// whatever you put between Toggle component it becomes a child of the Toggle and those props will automaticly be shared with them.
 
 function App() {
   return (
@@ -477,9 +477,9 @@ function App() {
         <ToggleButton />
       </Toggle>
     </div>
-  )
+  );
 }
-export default App
+export default App;
 ```
 
 compound Composition require a setup of
@@ -489,11 +489,11 @@ compound Composition require a setup of
 
 - then utilise those props in children.
 
-# limitation
+## limitation
 
 only be able to share props to 1 level deep, only to the children.
 
-# Note
+## Note
 
 i think you should not use Compound component becouse the props that the parent
 share to children are Implicit in nature, even though it can be made explicit if
@@ -504,7 +504,7 @@ not carefull.
 but the banifit of compound component also comes with the implicit nature of the
 Pattern.
 
-# side quest: 1 (HTML tag as a child)
+## Side quest: 1 (HTML tag as a child)
 
 if you add HTML tag as a child of the parent them those props will be shared to
 the HTML tag and as HTML can't understand those props React will thow an error
@@ -512,93 +512,89 @@ to solvew this simple check:
 
 typeof child.type === "string" in React.Chidlren.map()
 
-```
- return React.Children.map(children, child => {
-    if(typeof child.type === "string") return child
+```js
+return React.Children.map(children, (child) => {
+  if (typeof child.type === "string") return child;
 
-    let newChild = React.cloneElement(child, {on, toggle})
-    return newChild
-  })
+  let newChild = React.cloneElement(child, { on, toggle });
+  return newChild;
+});
 ```
 
-# side quest: 2 (make it Expilit)
+## Side quest: 2 (make it Expilit)
 
 you can make an array of all the childen and share that array and check if child
 is === to anyof the array element.
 
+```js
+return React.Children.map(children, (child) => {
+  if (ExpilitFn.includes(children)) {
+    let newChild = React.cloneElement(child, { on, toggle });
+    return newChild;
+  }
+});
 ```
- return React.Children.map(children, child => {
-    if(ExpilitFn.includes(children)){
-    let newChild = React.cloneElement(child, {on, toggle})
-    return newChild
-    }
-  })
+
+```js
+const ExplitFn = [ToggleOn, ToggleOff, ToggleButton];
 ```
 
-const ExplitFn = [ToggleOn,ToggleOff,ToggleButton]
+## 3. Flexible Compound Components (Imporved oversion of Compound Component)
 
-### 3. Flexible Compound Components (Imporved oversion of Compound Component)
-
-Compound Component + share props to anyLevel (useContext) + Explicit
-(useContext)
+`Compound Component + share props to anyLevel (useContext) + Explicit
+(useContext)`
 
 in flexible Compound Component we use useContext to share props to any level
 Deep Child component and due to useContext it become explicit.
 
 we don't use (React.Children.map, React.cloneElement) to share props
 
-lets take an ex:
+lets take an Ex:
 
-```
-import * as React from 'react'
-import {Switch} from '../switch'
+```js
+import * as React from "react";
+import { Switch } from "../switch";
 
-- here simply we created a context
+// here simply we created a context
 
-const ToggleContext = React.createContext()
+const ToggleContext = React.createContext();
 
-function Toggle({children}) {
-  const [on, setOn] = React.useState(false)
-  const toggle = () => setOn(!on)
+function Toggle({ children }) {
+  const [on, setOn] = React.useState(false);
+  const toggle = () => setOn(!on);
 
-- we pass props to value which will be shared to all the children who ever
-  consume with useContext
+  // we pass props to value which will be shared to all the children who ever consume with useContext
 
-- wrapping arround childen makes it share state to all the childrens  at any level
-  this is how Context works. pritty cool hehh...
+  // wrapping arround childen makes it share state to all the childrens  at any level this is how Context works. pritty cool hehh...
 
-- on the other hand, (React.Children.map, React.cloneElement) only manage to share
-  one level deep.
+  // on the other hand, (React.Children.map, React.cloneElement) only manage to share one level deep.
 
-  return <ToggleContext value={{on, toggle}}>{children}</ToggleContext>
+  return <ToggleContext value={{ on, toggle }}>{children}</ToggleContext>;
 }
 
-- now we just use useContext to get the value that we have passed from the
-  parent wrapper to chidlren to get the props out.
+// now we just use useContext to get the value that we have passed from the parent wrapper to chidlren to get the props out.
 
 function useToggle() {
-  return React.useContext(ToggleContext)
+  return React.useContext(ToggleContext);
 }
 
-function ToggleOn({children}) {
-  const {on} = useToggle()
-  return on ? children : null
+function ToggleOn({ children }) {
+  const { on } = useToggle();
+  return on ? children : null;
 }
 
-function ToggleOff({children}) {
-  const {on} = useToggle()
+function ToggleOff({ children }) {
+  const { on } = useToggle();
 
-  return on ? null : children
+  return on ? null : children;
 }
 
-function ToggleButton({props}) {
-  const {on, toggle} = useToggle()
-  return <Switch on={on} onClick={toggle} {...props} />
+function ToggleButton({ props }) {
+  const { on, toggle } = useToggle();
+  return <Switch on={on} onClick={toggle} {...props} />;
 }
 
-- here <ToggleButton /> can not be access props with compound component becouse
-  it is nested more then 1 level deep from the Parent (Toggle component) so we need
-  useContext. to go beyound 1 level or any level deep.
+// here <ToggleButton /> can not be access props with compound component becouse it is nested more then 1 level deep from the Parent (Toggle component) so we need useContext. to go beyound 1 level or any level deep.
 
 function App() {
   return (
@@ -611,22 +607,21 @@ function App() {
         </div>
       </Toggle>
     </div>
-  )
+  );
 }
 
-export default App
-
+export default App;
 ```
 
-# side quest: provide display name to Context for inspect Component
+## side quest: provide display name to Context for inspect Component
 
 when you inspect your Context in inspect React in dev tool you will see
 Context.Provider which is less imformative (which context is this context
 provider blong too)
 
-```
-const ToggleContext = React.createContext()
-ToggleContext.displayName = "ToggleContext"
+```js
+const ToggleContext = React.createContext();
+ToggleContext.displayName = "ToggleContext";
 ```
 
 now ToggleContext will be displayed rather then Context.Provider which makes it
@@ -634,9 +629,9 @@ more imformative.
 
 ---
 
-### Props collection (Object) and Getters (Function) (custom hook pattern)
+## Props collection (Object) and Getters (Function) (custom hook pattern)
 
-# Props collection (Object)
+### Props collection (Object)
 
 In React, a prop is a way to pass data from a parent component to a child
 component. Prop collections are simply a collection of props that are passed
@@ -656,42 +651,40 @@ we use props collection to group together closly related props in a single
 object so that it will be easer to organise the props and we don't forget group
 of props which are generally works/ require to be applied together.
 
-ex:
+Ex:
 
-```
-import * as React from 'react'
-import {Switch} from '../switch'
+```js
+import * as React from "react";
+import { Switch } from "../switch";
 
 function useToggle() {
-  const [on, setOn] = React.useState(false)
-  const toggle = () => setOn(!on)
+  const [on, setOn] = React.useState(false);
+  const toggle = () => setOn(!on);
 
-- here we are grouping together toggerProps becouse there props are
-  generaly require to be used together.
+  // here we are grouping together toggerProps becouse there props are generaly require to be used together.
 
-  return {on, toggle, togglerProps: {'aria-pressed': on, onClick: toggle}}
+  return { on, toggle, togglerProps: { "aria-pressed": on, onClick: toggle } };
 }
 
-- here is <Switch on={on} {...togglerProps} /> we are sharing these grouped props
-  which we used together.
+// here is <Switch on={on} {...togglerProps} /> we are sharing these grouped props which we used together.
 
 function App() {
-  const {on, togglerProps} = useToggle()
+  const { on, togglerProps } = useToggle();
   return (
     <div>
       <Switch on={on} {...togglerProps} />
       <hr />
       <button aria-label="custom-button" {...togglerProps}>
-        {on ? 'on' : 'off'}
+        {on ? "on" : "off"}
       </button>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
 ```
 
-# limitation of prop collection
+## limitation of prop collection
 
 props collection does not provided the flexibility to the prop user to use there
 own custom props, and only one prop will work either the prop collection object
@@ -699,30 +692,30 @@ provided by parent or the custom child prop becouse object can not have two keys
 with the same name due to that we can not have both props (child custom porp and
 parent collection props object) together.
 
-ex:
+Ex:
 
-```
+```js
 function App() {
-  const {on, togglerProps, toggle} = useToggle()
+  const { on, togglerProps, toggle } = useToggle();
   return (
     <div>
       <Switch on={on} {...togglerProps} />
       <hr />
       <button
         aria-label="custom-button"
-        onClick={() => console.info('onButtonClick')}
+        onClick={() => console.info("onButtonClick")}
         {...togglerProps}
       >
-        {on ? 'on' : 'off'}
+        {on ? "on" : "off"}
       </button>
     </div>
-  )
+  );
 }
 ```
 
-in this ex: look at the button Tag
+in this Ex: look at the button Tag
 
-```
+```js
  <button
         aria-label="custom-button"
         onClick={() => console.info('onButtonClick')}
@@ -740,24 +733,24 @@ onClick work here untill we use Props Getters.
 props collection don't have the flexibility that a child can specify its own
 values for certain props.
 
-# Props Getters (Function)
+## Props Getters (Function)
 
 props getter use fn which eleminate the problem of overwritting coz by Object.
 
 props getter also provide the flexibility that a child can specify it's own
 value for certain props
 
-ex:
+Ex:
 
-```
-import * as React from 'react'
-import {Switch} from '../switch'
+```js
+import * as React from "react";
+import { Switch } from "../switch";
 
 function useToggle() {
-  const [on, setOn] = React.useState(false)
-  const toggle = () => setOn(!on)
+  const [on, setOn] = React.useState(false);
+  const toggle = () => setOn(!on);
 
--------------------- original from the kent C Dodds --------------------------------
+  //-------------------- original from the kent C Dodds --------------------------------
   // function callALL(...Fns) {
   // ...Fns in parameter act as rest operator not spread and rest will collect all the
   //  parameters can create an array.
@@ -766,105 +759,97 @@ function useToggle() {
   //   }
   // }
 
-   function getTogglerProps({onClick, ...props} = {}) {
+  function getTogglerProps({ onClick, ...props } = {}) {
     return {
-      'aria-pressed': on,
+      "aria-pressed": on,
       onClick: () => callALL(onClick, toggle),
       ...props,
-    }
+    };
   }
------------------------ My version -----------------------------------------
 
-- callAll take the array of all the Fns that we want to Compose together,
-  check if the child has provided the fns (onClick) or not , if it's provided
-  then we will execute it with the toggler fn,if not then otherwise we only
-  trigger toggle fn of ours (from the parent).
+  //----------------------- My version -----------------------------------------
+
+  // callAll take the array of all the Fns that we want to Compose together, check if the child has provided the fns (onClick) or not , if it's provided then we will execute it with the toggler fn,if not then otherwise we only trigger toggle fn of ours (from the parent).
 
   function callALL(Fns) {
-    Fns.forEach(fn => fn?.())
+    Fns.forEach((fn) => fn?.());
   }
------- getTogglerProps version 2 when you have too many props to compose togther --------
-- here we are reciving props from the children and seprating onClick sepratly so that
-  we can compose it together to our onClick so that both onClick works together.
 
-- getTogglerProps returns an object which contain props that the parent want to send
-  and the props that child want to use, in this ex: we are composing [onClick, toggle]
-  functions when child trigger onClick callAll will execute
+  //------ getTogglerProps version 2 when you have too many props to compose togther --------
+  // here we are reciving props from the children and seprating onClick sepratly so that we can compose it together to our onClick so that both onClick works together.
 
+  // getTogglerProps returns an object which contain props that the parent want to send and the props that child want to use, in this ex: we are composing [onClick, toggle] functions when child trigger onClick callAll will execute
 
-  function getTogglerProps({onClick, ...props} = {}) {
+  function getTogglerProps({ onClick, ...props } = {}) {
     return {
-      'aria-pressed': on,
+      "aria-pressed": on,
       onClick: () => callALL([onClick, toggle]),
       ...props,
-    }
+    };
   }
------- getTogglerProps version 1 when you have 1 or 2 props to compose togther --------
 
+  //------ getTogglerProps version 1 when you have 1 or 2 props to compose togther --------
 
-  function getTogglerProps({onClick, ...props} = {}) {
+  function getTogglerProps({ onClick, ...props } = {}) {
     return {
-      'aria-pressed': on,
+      "aria-pressed": on,
       onClick: () => {
-        onClick?.()
-        toggle()
+        onClick?.();
+        toggle();
       },
       ...props,
-    }
+    };
   }
 
----------------------------------------------------------------------------
+  //---------------------------------------------------------------------------
   return {
     on,
     toggle,
-    togglerProps: {'aria-pressed': on, onClick: toggle},
+    togglerProps: { "aria-pressed": on, onClick: toggle },
     getTogglerProps,
-  }
+  };
 }
 
-- in <button> now we are using getTogglerProps() which is a function
-  that we are passing as a prop from the parent to the child.
+// in <button> now we are using getTogglerProps() which is a function that we are passing as a prop from the parent to the child.
 
-- getTogglerProps() take an object of key and value (props)
-  that child want to apply on the button and getTogglerProps() recive that object
-  and compose it together with the props that Parent want to send.
+// getTogglerProps() take an object of key and value (props) that child want to apply on the button and getTogglerProps() recive that object and compose it together with the props that Parent want to send.
 
-- we use spread operator on getTogglerProps() which returns an object.
--    <button
-    {
-      'aria-pressed': on,
-      onClick: () => callALL([onClick, toggle]),
-      'aria-label': 'custom-button',
-    }
+// we use spread operator on getTogglerProps() which returns an object.
+//   <button
+//    {
+//      'aria-pressed': on,
+//      onClick: () => callALL([onClick, toggle]),
+//      'aria-label': 'custom-button',
+//    }
 
-- now in parent both onClick are compose together so that both works.
+// now in parent both onClick are compose together so that both works.
 
 function App() {
-  const {on, getTogglerProps} = useToggle()
+  const { on, getTogglerProps } = useToggle();
   return (
     <div>
-      <Switch {...getTogglerProps({on: on})} />
+      <Switch {...getTogglerProps({ on: on })} />
       <hr />
       <button
         {...getTogglerProps({
-          'aria-label': 'custom-button',
-          onClick: () => console.info('onButtonClick'),
+          "aria-label": "custom-button",
+          onClick: () => console.info("onButtonClick"),
         })}
       >
-        {on ? 'on' : 'off'}
+        {on ? "on" : "off"}
       </button>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
 ```
 
 - only place prop getter shine over prop collection is that it is better at
   compostion of props, you can run multiple same name props together without
   overWritting isssues.
 
-### State Reducer Pattern (inversion of Control)
+## State Reducer Pattern (inversion of Control)
 
 In software development, inversion of control refers to a design principle where
 a component's dependencies are "injected" into it from the outside, rather than
@@ -891,21 +876,21 @@ reuse, since its behavior can be modified by changing its dependencies (i.e. the
 reducer function) rather than having to modify its internal implementation. This
 can make the component more useful and adaptable to a wider range of use cases.
 
-# My Observation
+## My Observation
 
-(useReduer + invesion of Control) allow you to create universaly useable
+`(useReduer + invesion of Control)` allow you to create universaly useable
 component that are highly customizable for the user rather then creating an API
 At author level which contain all the posibile side and use cases a user might
 want to use the API for.
 
-(useReduer + invesion of Control) API allow us to create an API which is small
+`(useReduer + invesion of Control)` API allow us to create an API which is small
 in size and contain only the nessesory code that can be used by wide range of
 user rather then having all the possible side cases which select few of the user
 ever uses and make the API bulkie in Size.
 
-ex: When you want to provide your own Complete reducer fn
+Ex: When you want to provide your own Complete reducer fn
 
-```
+```js
 import * as React from 'react'
 import {Switch} from '../switch'
 
@@ -930,18 +915,16 @@ function toggleReducer(state, {type, initialState}) {
   }
 }
 
-- how we make an API that allow invasion of control
-- we allow user to provide there own version of reducer method so they can customize
-  the behaviour as they like, and those user who don't want to customize the behavious
-  we provide a default reducer so that they don't need to worry about it.
+// how we make an API that allow invasion of control
 
-- as you can see function useToggle({reducer = toggleReducer} = {}) we are allowing
-  the user to share there form of reducer we pass this reducer to our useReducer Hook
+// we allow user to provide there own version of reducer method so they can customize the behaviour as they like, and those user who don't want to customize the behavious we provide a default reducer so that they don't need to worry about it.
+
+// as you can see function useToggle({reducer = toggleReducer} = {}) we are allowing the user to share there form of reducer we pass this reducer to our useReducer Hook
 
 function useToggle({initialOn = false, reducer = toggleReducer} = {}) {
   const {current: initialState} = React.useRef({on: initialOn})
 
-- here we are passing that reducer fn
+// here we are passing that reducer fn
 
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const {on} = state
@@ -978,7 +961,7 @@ function App() {
   const [timesClicked, setTimesClicked] = React.useState(0)
   const clickedTooMuch = timesClicked >= 4
 
-- this is the "toggleStateReducer" reducer function that user want to uses over our API
+// this is the "toggleStateReducer" reducer function that user want to uses over our API
 
 
   function toggleStateReducer(state, action) {
@@ -998,7 +981,7 @@ function App() {
     }
   }
 
-- here we are re-asigining user "toggleStateReducer" to our default reducer fn
+// here we are re-asigining user "toggleStateReducer" to our default reducer fn
 
   const {on, getTogglerProps, getResetterProps} = useToggle({
     reducer: toggleStateReducer,
@@ -1038,24 +1021,24 @@ complicated reducer, you just want to add few side cases only then
 - then import it to the place where you want to create your own custom reducer
   and do like this
 
-```
+```js
 function userReducer(state, action) {
-    const change = autherReducer(state, action)
-    if (action.type === 'toggle' && clickedTooMuch === true) {
-      return {...change, on: state.on}
-    } else {
-      return {...change}
-    }
+  const change = autherReducer(state, action);
+  if (action.type === "toggle" && clickedTooMuch === true) {
+    return { ...change, on: state.on };
+  } else {
+    return { ...change };
   }
+}
 ```
 
 - here you are just overWriting the change to a specific condition and keeping
   all the rest of the condition as they were. becouse reducer also returns an
   object
 
-# complete implementation
+## complete implementation
 
-```
+```js
 import * as React from 'react'
 import {Switch} from '../switch'
 
@@ -1110,15 +1093,15 @@ function useToggle({initialOn = false, reducer = toggleReducer} = {}) {
     getResetterProps,
   }
 }
-------------------------------------------------------------------------
+//------------------------------------------------------------------------
 export{toggleReducer,useToggle}
 
 import{toggleReducer,useToggle}
-------------------------------------------------------------------------
+//------------------------------------------------------------------------
 function App() {
   const [timesClicked, setTimesClicked] = React.useState(0)
   const clickedTooMuch = timesClicked >= 4
-----------------------------------------------------------------------
+//----------------------------------------------------------------------
   function toggleStateReducer(state, action) {
     const change = toggleReducer(state, action)
     if (action.type === 'toggle' && clickedTooMuch === true) {
@@ -1127,7 +1110,7 @@ function App() {
       return {...change}
     }
   }
---------------------------------------------------------------------
+//--------------------------------------------------------------------
   const {on, getTogglerProps, getResetterProps} = useToggle({
     reducer: toggleStateReducer,
   })
@@ -1159,7 +1142,7 @@ function App() {
 export default App
 ```
 
-# Side Note:
+## Side Note:
 
 when using reducer make sure create an actionType object which contain all your
 action type so people don't do mistake while typing action "string" in dispatch
@@ -1167,16 +1150,16 @@ and inside reduccer fn condtions.
 
 ex:
 
-```
+```js
 const actionTypes = {
-  toggle: 'toggle',
-  reset: 'reset',
-}
+  toggle: "toggle",
+  reset: "reset",
+};
 ```
 
 ---
 
-### Controled Props for (Custom Component)
+## Controled Props for (Custom Component)
 
 you probably have seen controlled props in react where react has buit in system
 for controlling the Form input.
@@ -1185,18 +1168,18 @@ lets take a look how we use controlled props in react Form input.
 
 1. we create a input tag in Form and add attributes like onChange and value.
 
-- value = allow us to control the user input that we want to show to the user
-  not what react suggest the value for this input.
+   - `value` : allow us to control the user input that we want to show to the user
+     not what react suggest the value for this input.
 
-but we don't take responsiblility of keeping the state updated and you also want
-to know when react will be updating the state it self this is what onChange
-attributes comes in.
+     but we don't take responsiblility of keeping the state updated and you also want
+     to know when react will be updating the state it self this is what onChange
+     attributes comes in.
 
-- onChange - trigger when react updates the states + we use e.target.value to
-  get the react suggested value that react will show if we don't interfear. we
-  take that value and then control it (modifily it) and pass it to the value
-  attribute to tell this is the value we want you to show to the user not the
-  one that you sugeested.
+   - `onChange` : trigger when react updates the states + we use e.target.value to
+     get the react suggested value that react will show if we don't interfear. we
+     take that value and then control it (modifily it) and pass it to the value
+     attribute to tell this is the value we want you to show to the user not the
+     one that you sugeested.
 
 2. to sharing the value state during the render we use a useState that we pass
    to value and setusestate value in onChange which cozes a re-render of the
@@ -1220,7 +1203,7 @@ state reducer act as a useState that we use to modify the state. now we need a
 system to keep tract of when the state is happening like onChange and we need a
 prop like value which changes the customInputComponent behaviour
 
-# How control props works for Component
+## How control props works for Component
 
 to create a control props you need?
 
@@ -1230,48 +1213,45 @@ to create a control props you need?
 3. you need onChange to know when the react will render and to be in sync with
    it.
 
-lets take an ex:
+lets take an Ex:
 
-```
+```js
 // Control Props
 
-import * as React from 'react'
-import {Switch} from '../switch'
+import * as React from "react";
+import { Switch } from "../switch";
 
 const callAll =
   (...fns) =>
   (...args) =>
-    fns.forEach(fn => fn?.(...args))
+    fns.forEach((fn) => fn?.(...args));
 
 const actionTypes = {
-  toggle: 'toggle',
-  reset: 'reset',
-}
+  toggle: "toggle",
+  reset: "reset",
+};
 
-function toggleReducer(state, {type, initialState}) {
+function toggleReducer(state, { type, initialState }) {
   switch (type) {
     case actionTypes.toggle: {
-      return {on: !state.on}
+      return { on: !state.on };
     }
     case actionTypes.reset: {
-      return initialState
+      return initialState;
     }
     default: {
-      throw new Error(`Unsupported type: ${type}`)
+      throw new Error(`Unsupported type: ${type}`);
     }
   }
 }
 
-- 7. here we recive the ( onChange, on: controlledOn) onChange to Sync, we need to
-     take the suggested on (initalOn) and then control it with our on (controlledOn);
+// 7. here we recive the ( onChange, on: controlledOn) onChange to Sync, we need to  take the suggested on (initalOn) and then control it with our on (controlledOn);
 
-- 8. here we need to take one more thing into concideration which makes this code
-     a little difficalt to understand. which is we have two type of Toggle component
+// 8. here we need to take one more thing into concideration which makes this code a little difficalt to understand. which is we have two type of Toggle component
 
-     1. toggle we want to control with our on (controlledOn).
-     2. toggle that we don't want to control so we want to use
-        there suggeseted value on (initalOn).
+//     8.1. toggle we want to control with our on (controlledOn).
 
+//      8.2. toggle that we don't want to control so we want to use there suggeseted value on (initalOn).
 
 function useToggle({
   initialOn = false,
@@ -1279,65 +1259,54 @@ function useToggle({
   onChange,
   on: controlledOn,
 } = {}) {
-  const {current: initialState} = React.useRef({on: initialOn})
-  const [state, dispatch] = React.useReducer(reducer, initialState)
+  const { current: initialState } = React.useRef({ on: initialOn });
+  const [state, dispatch] = React.useReducer(reducer, initialState);
 
-- 9. so first we need to check that have user clicked on the toggle btn that have on={bothOn}
-     on it or not this will help us to distinguesh that we need to show the controlledoutput
-     or suggested output
+  // 9. so first we need to check that have user clicked on the toggle btn that have on={bothOn} on it or not this will help us to distinguesh that we need to show the controlledoutput or suggested output
 
-- 10. onIsControlled will be true when user clicked over toggle btn that has on={bothOn} (defined)
-      otherwise it will show falsy which mean this trigger is coz by a toggle btn that don't have
-       on={bothOn} (undefined,null)
+  // 10. onIsControlled will be true when user clicked over toggle btn that has on={bothOn} (defined) otherwise it will show falsy which mean this trigger is coz by a toggle btn that don't have on={bothOn} (undefined,null)
 
-  const onIsControlled = controlledOn != null
+  const onIsControlled = controlledOn != null;
 
- - 11. here we are saying is onIsControlled then on value will be controlledOn otherwise state.on
-       (suggested on);
+  // 11. here we are saying is onIsControlled then on value will be controlledOn otherwise state.on (suggested on);
 
-  const on = onIsControlled ? controlledOn : state.on
+  const on = onIsControlled ? controlledOn : state.on;
 
   function dispatchWithOnChange(action) {
+    // 12. dispatch trigger reducer fn and return state = {on: !state.on} which is a boolean true/false but this is sugested on value meaning this will be the result if we don't control it.
 
-- 12. dispatch trigger reducer fn and return state = {on: !state.on} which is
-      a boolean true/false but this is sugested on value meaning this will be the result
-      if we don't control it.
-
-- 13. so we will only call disptach when we are not controlling the on value and let the
-      non controlled toggle btn behave as it should be.
+    // 13. so we will only call disptach when we are not controlling the on value and let the non controlled toggle btn behave as it should be.
 
     if (!onIsControlled) {
-      dispatch(action)
+      dispatch(action);
     }
 
-- 14. onChange will take state (suggested state and modify it) and
-      action (to verify that it is a toggle).
+    // 14. onChange will take state (suggested state and modify it) and  action (to verify that it is a toggle).
 
-- 15. how to take the suggested state u can call the reducer(previous state,action) =
-      to get the nextstate
-- 16. {...state, on} we are just overWritting state.on value (we are giving our new Controlled value
-      from the parent, we don't want to use suggested on value) with on and then onChange will re-render the parent with the newvalue in the Controlled Toggle Component. if we only provide state which only get's updated when we dispatch then our state will return the same value becouse we are not triggering dispach becouse it only trigger when user tap on controlled toggle btn.
+    // 15. how to take the suggested state u can call the reducer(previous state,action) =  to get the nextstate
 
-    onChange?.(reducer({...state, on}, action), action)
+    // 16. {...state, on} we are just overWritting state.on value (we are giving our new Controlled value from the parent, we don't want to use suggested on value) with on and then onChange will re-render the parent with the newvalue in the Controlled Toggle Component. if we only provide state which only get's updated when we dispatch then our state will return the same value becouse we are not triggering dispach becouse it only trigger when user tap on controlled toggle btn.
+
+    onChange?.(reducer({ ...state, on }, action), action);
   }
 
-  const toggle = () => dispatchWithOnChange({type: actionTypes.toggle})
+  const toggle = () => dispatchWithOnChange({ type: actionTypes.toggle });
   const reset = () =>
-    dispatchWithOnChange({type: actionTypes.reset, initialState})
+    dispatchWithOnChange({ type: actionTypes.reset, initialState });
 
-  function getTogglerProps({onClick, ...props} = {}) {
+  function getTogglerProps({ onClick, ...props } = {}) {
     return {
-      'aria-pressed': on,
+      "aria-pressed": on,
       onClick: callAll(onClick, toggle),
       ...props,
-    }
+    };
   }
 
-  function getResetterProps({onClick, ...props} = {}) {
+  function getResetterProps({ onClick, ...props } = {}) {
     return {
       onClick: callAll(onClick, reset),
       ...props,
-    }
+    };
   }
 
   return {
@@ -1346,53 +1315,50 @@ function useToggle({
     toggle,
     getTogglerProps,
     getResetterProps,
-  }
+  };
 }
 
-- 5. Toggle recive on (controlledOn) and onChange, toggle is our custom component
-     which will provide us the suggested value and we need to modify it with our
-     on (controlledOn) value.
+// 5. Toggle recive on (controlledOn) and onChange, toggle is our custom component which will provide us the suggested value and we need to modify it with our on (controlledOn) value.
 
-- 6. Toggle also sand this value to useToggle who manage the state of on
-     (inital on or the suggested on) which is the state we need to control with our own
-     controlled on;
+// 6. Toggle also sand this value to useToggle who manage the state of on (inital on or the suggested on) which is the state we need to control with our own controlled on;
 
-function Toggle({on: controlledOn, onChange, initialOn, reducer}) {
-  const {on, getTogglerProps} = useToggle({
+function Toggle({ on: controlledOn, onChange, initialOn, reducer }) {
+  const { on, getTogglerProps } = useToggle({
     on: controlledOn,
     onChange,
     initialOn,
     reducer,
-  })
-  const props = getTogglerProps({on})
-  return <Switch {...props} />
+  });
+  const props = getTogglerProps({ on });
+  return <Switch {...props} />;
 }
 
-- 1. start reading the code from here
-- 2. we are using bothOn (value) to control the custom component
+// 1. start reading the code from here
 
-- 3. handleToggleChange is (onChange) to sink our result with the react
+// 2. we are using bothOn (value) to control the custom component
+
+// 3. handleToggleChange is (onChange) to sink our result with the react
 
 function App() {
-  const [bothOn, setBothOn] = React.useState(false)
-  const [timesClicked, setTimesClicked] = React.useState(0)
+  const [bothOn, setBothOn] = React.useState(false);
+  const [timesClicked, setTimesClicked] = React.useState(0);
 
-- 17. here we are changing the suggested on (state.on) value with our controlled on value
+  // 17. here we are changing the suggested on (state.on) value with our controlled on value
 
   function handleToggleChange(state, action) {
     if (action.type === actionTypes.toggle && timesClicked > 4) {
-      return
+      return;
     }
-    setBothOn(state.on)
-    setTimesClicked(c => c + 1)
+    setBothOn(state.on);
+    setTimesClicked((c) => c + 1);
   }
 
   function handleResetClick() {
-    setBothOn(false)
-    setTimesClicked(0)
+    setBothOn(false);
+    setTimesClicked(0);
   }
 
-  - 4. in Toggle we are providing as on (value) and onChange as (onChange)
+  // 4. in Toggle we are providing as on (value) and onChange as (onChange)
 
   return (
     <div>
@@ -1414,17 +1380,17 @@ function App() {
         <div>Uncontrolled Toggle:</div>
         <Toggle
           onChange={(...args) =>
-            console.info('Uncontrolled Toggle onChange', ...args)
+            console.info("Uncontrolled Toggle onChange", ...args)
           }
         />
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
 // we're adding the Toggle export for tests
-export {Toggle}
+export { Toggle };
 
 /*
 eslint
@@ -1432,7 +1398,7 @@ eslint
 */
 ```
 
-# Extra (remove warning code in production)
+## Extra (remove warning code in production)
 
 when you create code in development mode you endup creating warning code which
 trigger when some importent condition are not met (every type of self
