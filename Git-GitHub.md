@@ -2249,7 +2249,7 @@ so there is a simpler sintex you can use to create your markDown files. which la
 | Unordered List  | - First item<br>- Second item<br>- Third item    |
 | Code            | \`code\`                                         |
 | Horizontal Rule | \-\-\-                                           |
-| Link            | \[title](https://<span></span>www\.example.com)` |
+| Link            | \[title](https://<span></span>w<span>ww.<span></span>example.com)` |
 | Image           | \!\[alt text](image.jpg)                         |
 
 ---
