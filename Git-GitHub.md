@@ -334,7 +334,7 @@ you can check log/recod of commit which tells you who has commited to the repo a
 git log
 ```
 
-git log give you everyting related to commit. who commited the commit,when he commited it. and the commit message
+git log give you everything related to commit. who commited the commit,when he commited it. and the commit message
 
 if you are only intrested in the summary of the commit message. then you can use --oneline flag with the git log it will give you first line of message of all the commits which is helpful. you don't need to see all the other things that you are not interested in.
 
@@ -662,6 +662,14 @@ if you added new file in parallel branch then there is no conflict its easy to a
 what happens is parallel branch all new commits [P1,P2] will be added to the master branch.
 
 Note: after merge parallel branch still exist it has not been removed.
+
+> no to fast forward
+
+when we do fast forward merge. it will merge the data to the current commit without creating new commit. if you want to have a new commit which indicate that at this point a merge happend and what to have a history of a new commit to go back to. you can use --no-ff
+
+```
+git merge --no-ff <BranchName>
+```
 
 # case 2: merge conflcit (non-overlaping code)
 
@@ -1326,7 +1334,7 @@ git checkout <remotename>/<branchName>
 Ex: git checkout origin/main
 ```
 
-this will ofcouse will decapitate your head. you can obsercer and switch back to main again to do your work.
+this will ofcouse will detached your head. you can obsercer and switch back to main again to do your work.
 
 as you can see gitHub does not automatically it's repo in reference to git (local machine) so you need to manually tell github by using git push <remote> <branchName>
 
@@ -1906,6 +1914,15 @@ when you first clone a repo. your main-branch and your remote-tracking-branch bo
 git pull <remote> <branch>
 ```
 
+Note: it's importent to be on the right branch when you run the command of git pull becouse it will merge the new changes to the currently standing branch.
+
+```
+// short hand for pull;
+git pull
+```
+
+it will pull the same branchNamed repo from the remote that you are curently standing on and merge the newly updated commits. this shorthand work due to upstream relationship
+
 pull = fetch + merge
 
 ```
@@ -1979,3 +1996,741 @@ now you are ahread one commit.
 pulling combine feching and merging into single command.
 
 pulling download all the new commits from the gitHub and then imidiataly add those change by merging into our current working directory. which will create a conflict. and you can reslove the merge depend on the conflict you are having.
+
+recommended tip: when you are done with your work. before you push your code to github. it is better to pull (download and merge new commits) so that there will be no conflict on the github repo.
+
+### github README file
+
+if you create a README file in your repo and place that file in the root of your project. github will automatically use that file to show read me content. in your repo.
+
+ReadME file are usefull for people who visit your repo for the first time. it has detailed instructions about what your project repo is? how to use it? how to contribute to it and so on.
+
+READMEs are Markdown files, ending with the .md extension. Markdown is a convenient syntax to generate formatted text. It's easy to pick up!
+
+Note: when you create readme file in your root. make it capitalcase README.md
+
+### MarkDown Syntex
+
+you can create a new file with .md extension your VS-code editor will recoganise it as markdown file. you can see the markdown file changes by ctrl k + v . this will open a preview window for you where you can see what the end result looks like of a markdown file. when it is converted into normal HTML.
+
+Note: you can use normal HTML too to create markdown files too but the syntex for HTML you have to deal with too much boilerplate code.
+
+so there is a simpler sintex you can use to create your markDown files. which later automatically converted into HTML by markdown file reader.
+
+````
+Element Markdown                          Syntax
+
+Heading                                   # H1
+                                          ## H2
+                                          ### H3
+
+Bold                                      **bold text**
+
+Italic                                    *italicized text*
+
+Blockquote                                > blockquote
+
+Ordered List                              1. First item
+                                          2. Second item
+                                          3. Third item
+
+Unordered List                            - First item
+                                          - Second item
+                                          - Third item
+
+Code                                      `code`
+
+Horizontal Rule                           ---
+
+Link                                      [title](https://www.example.com)
+
+Image                                     ![alt text](image.jpg)
+
+
+Extended Syntax
+
+These elements extend the basic syntax by adding additional features. Not all
+Markdown applications support these elements.
+
+Element                                   Markdown Syntax
+
+Table                                     | Syntax | Description |
+                                          | ------ | ----------- |
+                                          | Header | Title |
+                                          | Paragraph | Text |
+
+Fenced Code Block                         ```
+                                          {
+                                          "firstName": "John",
+                                          "lastName": "Smith",
+                                          "age": 25
+                                          }
+                                          ```
+
+Fenced Code Block                         ```<tell the name of language the code is written in
+       with color coded lines (syntex highlighting)    Ex: js,jsx,ts>
+                                          {
+                                          "firstName": "John",
+                                          "lastName": "Smith",
+                                          "age": 25
+                                          }
+                                          ```
+
+Footnote                                  Here's a sentence with a footnote. [^1]
+                                          [^1]: This is the footnote.
+
+Heading                                   ID ### My Great Heading {#custom-id}
+
+Definition                                List term
+                                          : definition
+
+Strikethrough                             ∼∼The world is flat.∼∼
+
+Task List                                 - [x] Write the press release
+                                          - [ ] Update the website
+                                          - [ ] Contact the media
+````
+
+you can visit: https://markdown-it.github.io/ for better markdown syntex understanding.
+
+markdown file Automatically convert a URL to a link and it's quite annoying sometimes. you don't want the URL to be a link you just want it to be a string type.
+
+you can solve this issue by adding <span><span> tags
+
+```
+ https://<span></span>markdown-it.github.io/
+```
+
+this will automatically break the flow of url and don't let it automatically register as link.
+
+you can also add empity space with &nbsp;
+
+### gitHub gist
+
+Github Gists are a simple way to share code snippets and useful fragments of code with others. gist are like mini-repo. it contain the code snippet (as repo) and it's commit history. Gists are much easier to create, generally used to collect good piece of code that you like and want to keep them as refrence, or want to discuss a piece of code with other collaburator to fix a problem.
+
+GitHub Gist is a feature of GitHub that allows users to share and collaborate on small code snippets, text, or other pieces of content. Gists are like mini-repositories where you can store and share code snippets, notes, configurations, and more. Each Gist has its own URL, making it easy to share with others.
+
+> Key features of GitHub Gist include:
+
+- Code Sharing: Gists are commonly used to share code snippets or small pieces of code. You can create Gists for various programming languages and technologies.
+
+- Version Control: Each Gist has version history, allowing you to track changes over time. You can view the revisions made to a Gist and revert to previous versions.
+
+Collaboration: You can invite other GitHub users to collaborate on a Gist by allowing them to edit or comment on it. This makes it useful for collaborative coding or reviewing code together.
+
+- Embedding: Gists can be easily embedded into websites, blog posts, or documentation. This allows you to showcase code examples in an interactive and readable format.
+
+- Public and Private Gists: Gists can be public or private. Public Gists are visible to everyone and can be found by search engines, while private Gists are only visible to you and users you explicitly share them with.
+
+- Star and Fork: You can "star" Gists that you find interesting or useful. You can also "fork" Gists, creating your own copy that you can modify and work on separately.
+
+- Categories and Tags: You can categorize Gists using tags to make them easier to discover and organize.
+
+GitHub Gist provides a simple way to share and collaborate on code snippets without the need for a full-fledged repository. It's especially useful for quickly sharing code examples, troubleshooting issues, and collaborating on small projects or concepts
+
+### GitHub Pages
+
+GitHub Pages is a web hosting service provided by GitHub that allows you to publish and share web content directly from your GitHub repository. It's a powerful and convenient way to create static websites, blogs, documentation, and more using your GitHub repositories as the source for your content.
+
+Key features of GitHub Pages include:
+
+- Static Website Hosting: GitHub Pages hosts static websites, which means you can publish HTML, CSS, JavaScript, images, and other web assets. It's suitable for websites that don't require server-side processing.
+
+- Automatic Deployment: GitHub Pages automatically builds and deploys your website whenever you push changes to the repository. This eliminates the need for manual uploading or syncing of files.
+
+- Custom Domains: You can use a custom domain name (e.g., www.example.com) for your GitHub Pages website. This is useful for branding and making your site accessible through a memorable URL.
+
+- Project Sites and User/Organization Sites: GitHub Pages can be set up at both the user or organization level (username.github.io) and at the project repository level (username.github.io/repository-name). This allows you to host websites related to your projects or personal/organizational pages.
+
+- Free Hosting: GitHub Pages hosting is free, making it a cost-effective solution for hosting personal websites, project documentation, portfolio sites, and more.
+
+> Getting started with GitHub Pages is straightforward:
+
+1. Create a new repository or navigate to an existing repository on GitHub.
+2. go to setting > Pages
+3. select your source : where you have to select a branch which is used as a folder which contain all the nesesory files for a web page.(at least index.html is required)
+4. press save and you are Done.
+
+you can also provide your custom domain name if you want.
+
+GitHub Pages is a great way to showcase your work, create Personal Portfolio, create documentation, share projects, and build a web presence using the tools and repositories you're already familiar with on GitHub.
+
+### collaburative workflows??
+
+there are common patterns which people use to work in teams.
+
+1. centralized Workflow
+
+Everyone Works On Main Branch. and there is only one branch.
+
+it's simple but coz alot of overhead for all the collaborator developers.
+
+here are some common problems:
+
+- **Merge Conflicts:** When multiple developers are working on the same branch, pushing changes simultaneously can lead to merge conflicts. This occurs when the changes made by one developer overlap with the changes made by another developer. Resolving these conflicts can be time-consuming and disrupt the development process.
+
+- **Frequent Merge Conflicts:** the continuous merging of changes can lead to frequent and unnecessary merge conflicts, affecting developers' productivity and causing frustration.
+
+- **Code Quality and Stability:** If a developer pushes incomplete or unstable code to the shared branch, it can lead to issues for everyone else working on the project. It can potentially break the codebase and cause delays in development.
+
+- **Risk of Data Loss:** In a centralized workflow, there's a risk that accidental or malicious actions can lead to data loss. If someone deletes the main branch or other important code, it can result in significant setbacks and loss of work.
+
+- **Lack of Isolation:** Working on the same branch can limit developers' ability to work independently and experiment with new features without affecting the main codebase.
+
+2. Feature branching
+
+In feature branching developers create separate branches for each new feature or task they are working on.
+
+here are common features of feature branching:
+
+- **Feature Branching:**
+
+  - Developers create separate branches for each new feature or task they're working on.
+  - These feature branches are isolated from the main codebase and allow developers to work on their changes independently.
+
+- **Main Branch as Production:**
+
+  - The main branch, often referred to as the `master` or `develop` branch, represents the production-ready codebase.
+  - Feature branches are created based on this main branch.
+
+- **Merging and Review:**
+
+  - Once a developer completes work on their feature branch, the changes are reviewed before they're integrated into the main branch.
+  - This review process ensures that the code meets quality standards and doesn't introduce errors.
+
+- **Code Conflict Prevention:**
+
+  - Since developers work on separate feature branches, the risk of immediate code conflicts is minimized.
+  - Developers can freely make changes within their own branches without affecting others' work.
+
+- **Controlled Integration:**
+
+  - Instead of every developer having direct permission to merge code into the main branch, a trusted individual or team can oversee the integration process.
+  - This control helps maintain the stability and quality of the main branch.
+
+- **Risk Mitigation:**
+  - By reviewing and testing changes in feature branches, the risk of introducing bugs or breaking the main codebase is reduced.
+  - Feature branches allow for thorough testing without affecting the main code.
+
+### What is Forking??
+
+In GitHub, a fork refers to the action of creating a personal copy of another user's repository (or a public repository) in your own GitHub account. This copy is completely independent of the original repository, allowing you to make changes, experiment, and contribute to the codebase without directly affecting the original repository.
+
+when you fork a repo, entire repo get's copied to your own account with all the files and all the commit history. there is no upstream realtionship. you get a copy upto the last commit, till that time. No future commits will be updated automaitcally in your copied repo. you have to manually pull or fetch new changes from the original-repo to your copied-repo.
+
+Here's how the process of forking works on GitHub:
+
+1. **Navigate to the Repository:** Go to the GitHub page of the repository you want to fork.
+
+2. **Fork the Repository:** On the top right corner of the repository page, there's a "Fork" button. Clicking this button initiates the process of creating a copy of the repository in your GitHub account.
+
+3. **Choose the Destination:** When you click the "Fork" button, GitHub will prompt you to choose where you want to fork the repository. You can select your personal user account or any organizations you are part of.
+
+4. **Forking Process:** GitHub will create a complete copy of the repository, including all its files, branches, commits, and history, under your account. You'll be automatically redirected to the forked repository's page.
+
+5. **Work in Your Fork:** You can now make changes, create branches, add commits, and push them to your forked repository. This is a safe space to experiment without affecting the original repository or its contributors.
+
+you generally make a new branch to try out your own new fetatures. adn later commit and push it to your own copy-repo.
+
+6. **Keeping Up-to-Date:** Over time, as the original repository gets updated, you might want to incorporate those changes into your fork. This can be done by adding the original repository as a remote and pulling in changes. This ensures that your fork remains in sync with the original repository.
+
+when you fork a repo. you are making a copy of the original repo. but as time passes its quite possible that the original repo get's updated as time passes. but those changes are not reflected in your copied-repo. becouse there is no connection no link between your copied-repo and original-repo. once you copied it now it's in your own independent environment to experiment. you can do what ever you want.
+
+so, to be uptodate with the newly added commits to the original-repo. you can added that origina-repo in your local-machine as remote generally named as upstream. becouse you are using it for pulling new changes in your copied repo (in your local machine). you can't push changes becouse you don't have permision to push in the original repo.
+
+7. **Contributing Back:** If you've made changes or improvements in your fork that you think could benefit the original repository, you can submit a pull request. This is essentially a request to the original repository's maintainers to consider merging your changes into their codebase.
+
+Forking is a key feature of GitHub and other Git-based version control systems. It promotes collaboration, open-source contributions, and allows developers to work on projects without requiring direct access to the original repository. It's often used to contribute to open-source projects, experiment with code, and create personalized versions of existing projects.
+
+### What is Pull Request (PR)
+
+- it is a request to the owner of the repository to merge your branch to the original repo.
+
+when we use git pull origin. we fetch + merge changes to the working directory but in our local machine. in pull request we want the owner of the repository to fetch our branch and merge our branch to there working directory.
+
+A pull request (often abbreviated as PR) is a feature commonly used in GitHub to propose and manage changes to a codebase or repository that we do not have access to. It serves as a way for developers to collaborate, review, and discuss code changes before they are merged into the main codebase.
+
+Here's how the process typically works:
+
+1. Forking: A developer who wants to contribute to a repository first creates a personal copy (fork) of the repository. This allows them to work on changes without directly affecting the original repository.
+
+2. Creating a Branch: The developer creates a new branch in their forked repository. This branch is dedicated to the specific changes they intend to make. This helps isolate their work from the main codebase.
+
+3. Making Changes: The developer makes the necessary code changes, additions, or deletions in the branch. make a new branch and add new changes.
+
+4. Committing Changes: As the developer works on the changes, they commit their changes to the branch. Each commit represents a logical step in the development process.
+
+5. Pushing to Fork: After the developer is satisfied with the changes, they push the branch with its commits to their forked repository on the version control platform.
+
+commit changes and push them into your copied repo. there you will see a message that say now your copied-repo is some commit ahead to the original-repo.
+
+6. Creating a Pull Request: Once the branch is pushed to the forked repository, the developer initiates a pull request from that branch to the original repository. The pull request serves as a request to merge the changes into the original repository's main branch.
+
+pull request will open a new window which has similar to github commit interface. it will as you where you want to push the changes to (main branch) and what you want to push (feature branch). ask you for a message and a description for pull request. and submit.
+
+7. Code Review: Other developers and collaborators can review the code changes, leave comments, suggest improvements, and ask questions within the context of the pull request. This collaborative process helps ensure code quality, readability, and correctness.
+
+8. Discussion and Iteration: The developer who initiated the pull request can respond to comments, make additional commits to address feedback, and refine their changes based on the feedback received during the review process.
+
+9. Merging: Once the changes have been reviewed, approved, and any necessary adjustments have been made, a repository maintainer or someone with the necessary permissions can merge the pull request. This incorporates the proposed changes into the main branch of the original repository.
+
+if you are the owner/maintainer of the original repo and want to merge the changes you can merge the changes on github but it is recommanded to open the request in local machine in vs-code so that if merge conflict arises you can handle it. you can click on view on command line instruction.
+
+it will show you some basic command to open this branch and merge it.
+
+Ex:
+
+```
+git fetch origin // download all new changes with all the branchs
+git switch my-new-feature  // go to the branch
+git merge main  //fix conflicts! // merge that branch with main
+git push origin main // update the github repo
+```
+
+pull request will be automatically updated to merged and you can close the request.
+
+10. Closing the Pull Request: After the changes are merged, the pull request is typically closed. Depending on the platform and workflow, it might be marked as merged or closed without merging.
+
+Pull requests are a fundamental aspect of collaborative software development, enabling teams to maintain a controlled and organized approach to integrating changes, fostering collaboration, and ensuring the quality of the codebase.
+
+## How to contribute to opensource project.
+
+1. FORK THE PROJECT // copy the original repo in your github account
+2. CLONE THE FORK // clone it to your local machine
+3. ADD UPSTREAM REMOTE // set a upstream remote original repo
+4. DO SOME WORK // do work on your copied repo
+5. PUSH TO ORIGIN // push the updated code to your copied repo
+6. OPEN PR // raise a PR to original repo
+
+### Rebase
+
+Rebase hsa two features:
+
+1. as an alternative to merge (Read Rebase vs merge)
+2. as history Cleanup tool (Read Intereactive Rebase)
+
+## Rebase vs merge
+
+let's understand what's the problem with simple merge.
+
+let's say there is a team of 10 developer working on same project. you are one of them and working on a feature branch. as development procedes other developer complete there work on there branch and there branches will be merged into the main branch. the process of merging branchs to the main branch happens maltiple times in a day depending on the size of the team.
+
+so you are working on feature branch and endup needing a feature of someother developer. to complete your feature developement. as other developers completes there branches work there work will be merged to the main branch and you will later merge "main" branch into your "feature" branch so that you can take advantage of other developer work features and incorporate that into your feature-branch.
+
+as you are working on a feature that constantly needs other developer work to complete your feature you will do a lot of merges (merging main branch into your feature branch).
+
+adding merges again and again will clutter your commit history makes it muddier (dirty).
+
+```
+// it will looks like this
+// commit-1: "created feature file"
+// commit-2: "added navbar"
+// commit-3: "merged main-to-feature"
+// commit-4: "added hero"
+// commit-5: "added aside"
+// commit-6: "merged main-to-feature"
+// commit-7: "added section-1"
+// commit-8: "merged main-to-feature"
+```
+
+it's hard to look in your commit history and tell what work have you done with these merged commit disturbing the flow of commits.
+
+```
+                                          Head
+                                           ↓
+                                          Main
+                                           ↓
+--------------------------------------------
+      commit-M1        commit-M2       commit-M3
+                            \
+                             \
+                              -----------------------
+                                    commit-F1   commit-F2
+                                                    ↑
+                                             Feature-Branch
+=============================================================================================
+// git merge
+                                          Head
+                                           ↓
+                                          Main
+                                           ↓
+-----------------------------------------------
+      commit-M1        commit-M2       commit-M3
+                            \                    \
+                             \                    \
+                              \                    \
+                                ----------------------
+                            commit-F1   commit-F2    commit-FM
+                                                        ↑
+                                                 Feature-Branch
+
+
+```
+
+> git rebase
+
+git rebase solve this commit history clutter problem by "Re-writing the commit history" when you rebase. it removes all of the commit histroy of that branch (the branch you are merging into Ex:feature branch). and "reset-base" of that branch and re-write all of the commit histroy from the new-base.
+
+```
+                                          Head
+                                           ↓
+                                          Main
+                                           ↓
+--------------------------------------------
+      commit-M1        commit-M2       commit-M3
+                            \
+                           ↑ \
+                           ↑   -----------------------
+                           ↑         commit-F1   commit-F2
+                           ↑                         ↑
+                          BASE                  Feature-Branch
+```
+
+current base (the stating point where the feature-branch starts to diverge from the main branch). is at commit-M2. rebase shift the base of (feature-branch) to the Tip of the main branch (which endup adding all the changes of the main branch to the feature branch) and re-commit all of the commit that you have added in your feature branch. there re-commit are completly new commit but done automatically.
+
+```
+git rebase
+                                          Head
+                                           ↓
+                                          Main
+                                           ↓
+--------------------------------------------
+      commit-M1        commit-M2       commit-M3
+                                           \
+                                          ↑ \
+                                          ↑  -----------------------
+                                          ↑        commit-F1   commit-F2
+                                          ↑                        ↑
+                                        BASE                 Feature-Branch
+```
+
+this is modify the original commit history. but made your dirty commit history much clearner.
+
+```
+// it will looks like this
+// commit-1: "created feature file"
+// commit-2: "added navbar"
+// commit-3: "added hero"
+// commit-4: "added aside"
+// commit-5: "added section-1"
+```
+
+you can use git merge to merge all of the changes again and again. and at end of the day when you decide i have done enough work you can run git rebase "BranchName" and it will re-write the history of your feature branch. or you can use rebase instend of merge on every merge you want to do. both works fine.
+
+rebase is a great tool. it helps to group together all of your feature-branch commit in the commit history by re-writing the history and removing all the merge-clutter.
+
+Note: there will be no merge commit in the commit history of the feature branch. it will feel like you have done fast forward merge.
+
+> lets understand the syntex of rebase for merging.
+
+```
+git switch branch  // first switch to the branch you want to merge into (fetaure-branch)
+git rebase "mergeToBranchName" // tell which branch you want to merge (main-branch)
+```
+
+> when merge conflcit arises
+
+at the time of merge-conflict you will see an error meessage "merge conflict in XYZ file". at this point in time your rebase has paused it's mergeing process. you are in the middle of merging. half of your merge is done but later there was an conflict. you can fix the conflict and continue the merging process or you can abort the merging completly and go back to how it was before merging.
+
+to keep mergin after fixing the conflict and adding the changes into staging area. and then continue merging.
+
+```
+git rebase --continue
+```
+
+or abort the merging and get back to where we were before we start mergeing.
+
+```
+git rebase --abort
+```
+
+> Some Golden Rules to use rebase properly.
+
+Rebase is useful but can be dangerous at times. becouse it has the potential to re-write the commit history. it is recommended to never ever use rebase on the main branch (don't merge any feature-branch to the main-branch with rebase) becouse it will remove all the muddie-commits (cluter) of the main branch and all the developer which had cloned it earlier will have the muddie-commit history version of main branch and now main don't have any cluter. it will create problem when other developer try to merge there feature to the main-uncluter branch. becouse both have different commit history for the main branch.
+
+Note: eventhough it is possible to fix this problem but it's really dificult task becouse the history has been tempered.
+
+it is only safe to use rebase on feature-branchs only.becouse all other developer don't have any history of your feature-branch. so it is safe. you are working on the feature branch locally. in seprate branch.
+
+## Intereactive Rebase
+
+```
+git rebase -i <commitHash>
+git rebase -i Head~Number
+```
+
+As we all know Rebase has the capability to re-write the history of the currently standing branch. rebase intereactive mode allow us to modify the commit history of the currently standing branch and then re-write the history. this help us to clean up our commit history. Ex: combining two commits into one commit, fixing typo by re-wrtiting the commit messsage of a commit, removing a commit from the commit history and many more.
+
+you can go back to any commit in the commit history and modify any number of commit from the commit history. rebase will start re-writing from the last commit that you have modified up to the tip of the branch. all of those commit will be removed and re-commited, completly new commits will be added
+automatically with new commit hesh.
+
+# Purpose of Interactive Rebase
+
+The primary purpose of interactive rebase is to enable commit history cleanup, which includes tasks like:
+
+- Combining multiple commits into one.
+- Editing commit messages.
+- Removing unwanted commits.
+- Rearranging the order of commits.
+
+# how intereactive mode works?
+
+```
+git rebase -i <commitHash>
+git rebase -i Head~Number
+```
+
+when you run this command. you choice of editor will open up. which contain commit history upto the point you have defined by giving commitHash code.
+
+```
+Method    Commit-Hash       Commit-Message
+
+pick      f7f3f6d           Change my name a bit         ↓    Oldest commit
+pick      310154e           Update README                ↓
+pick      a5f4a0d           Add cat-file                 ↓    Newest commit
+```
+
+you can decide which commits you want to modify and what kind of modification you want to do by chaning the method.
+
+pick means keep this commit. there are many type of modification methods to choose from. you will find a detailed description of all modifer type blow in that same file. simply change the method and save the file. and close it. which ever modification method you have choosen that will be take place just after you close the file. rebase was waiting for you to tell what you want to modify. depending on the type of modification rebase will take action accordingly.
+
+Note: which ever oldest commit you have decided to modify. all of the commits that come after that commit will be re-written. you can define multiple modifer all at once too.
+
+# type of modification we can do?
+
+there are ton of modification methods avalilable in rebase but here are some most commonly used methods:
+
+- pick - use the commit. keep the commit has it was. (default)
+- reword - use the commit, but edit the commit message.
+- edit - use commit, but stop for amending. you can edit code.
+- fixup - use to combine a commit into it's previous commit all of the changes that you have made in the new commit will be added into previous commit and that commit will be removed.
+- drop - remove commit.
+
+# Workflow
+
+1. Specify the modifications you want for each commit in the editor.
+2. Save and close the editor.
+3. rebase applies the specified changes sequentially, effectively rewriting the history.
+
+# How to use rebase properly
+
+you should not use rebase in main branch. which means don't use rebase when other developer of the teams has the shared history. changing the history might create un-nessesery merge conflict.
+
+only use rebase on local machine on a feature branch before shareing the histroy with other. use it to cleanup your work before you decide to share your work with other developer.
+
+### Tags
+
+Git tag allow us to mark/add a Note/label/tag a specific commit in the commit history of the repo. generally tags are used for marking or highlighting an importent point in commit history like versions release of the project.(Ex: v8.0.2)
+
+there are two type of tags:
+
+1. lightweight tags : tags that contain only a label or name.
+2. annotated tags : tag label + more details like meta data (like author name , email), tag description message like a comment.
+
+# tag sintex and it's useage.
+
+> To view list of all the tags in your repo.
+
+```
+git tag               // l is implicit here
+git tag -l
+```
+
+> To filter some tags from the list
+
+```
+git tags -l "pattern"
+Ex: git tags -l "*Tag*"
+```
+
+you can use any wild card in the pattern to filter out your tags. in this example i have use * which refer to any number of character. so *tag\* means any number of charactor before and after the tag word.
+
+> To checkout/visit a perticuler taged commit from the commit histroy
+
+```
+git checkout <tag>
+```
+
+you can visit a tag with checkout by giving it a tag name. it will detach the head and you can visit that specific commit from the commit history. just like git commit <commitHashCode> or git commit <Head~Number>.
+
+> To check the different between two different Tags commit
+
+```
+git diff <Tag1> <Tag2>
+```
+
+> create Tags
+
+> > add tag to the currently standing commit
+
+1. lightWeight tag
+
+```
+git tag <tagName>
+Ex: git tag v17.0.1
+```
+
+2. annotated tags
+
+```
+git tag -a <tagName>
+```
+
+this will add a label + openUp your VS_Code where you can type any type of additional info you want like a description or additonal meta data if you like.
+
+> > add tag to older commit from the commit histroy.
+
+```
+git tag <tagName> <commitHash>         // for lightweight
+git tag -a <tagName> <commitHash>      // for anotated
+```
+
+> > Force Move a tag.
+
+```
+git tag -f <tagName>
+```
+
+this will remove the tag from the original tagged commit and move it to the specified tagName commit.
+
+> to see detailed description of a taged commit
+
+```
+git show <tagName>
+```
+
+give a detailed description of the tager. like who tagged it (author), email of the tager, date and time of the tagging, annotated taged message if any etc.
+
+> delete a tag
+
+```
+git tag -d <tagname>
+```
+
+# pushing tags
+
+when you push your changes to your remote repository. tags are not included by deafult in your pushed changes. you have to manually tell to push your tags seprataly
+
+> push all the tags (push only newly added tag)
+
+```
+git push <repoName> <branchName> --tags
+git push --tags                               // with upstream realtionship
+```
+
+it will push all the tags from the local machine to the remote repo. if remote repo has some of the tags you are sending then it will only send the missing tags that the repo doesn't have.
+
+so on consecutive push only the newly added tags will be pushed.
+
+> push a specific tag (push only one specific tag)
+
+```
+git push <repoName> <tagname>
+```
+
+it will only push a specific tag to the remote repo. it will not push your commit changes only the tag
+
+### How to restore a file data that you have excidently deleted but you have the commitHash of that ?
+
+- to print and check the content that git have stored at a perticuler hash
+
+```
+git cat-file -p <commitHash>
+```
+
+- to retrive that content from the git and store it into a file.
+
+```
+git cat-file -p <commitHash> > fileName.extention
+Ex: git cat-file -p <commitHash> > Index.html
+```
+
+### reflog
+
+when we use git log it shows the commit history of a repository. it shows all the commits that has oocered while working on this repository.
+
+```
+commit c4e4e62f735ef23452367e6fa27f5678298a19e3
+Author: John Doe <john@example.com>
+Date:   Tue Aug 10 12:30:00 2023 +0200
+
+    Add feature X functionality
+
+commit 7f75e902e3bc091c20d918f41c8d9826ca65d6e9
+Author: Alice Johnson <alice@example.com>
+Date:   Sun Aug 08 09:15:00 2023 +0200
+
+    Update documentation for new API changes
+
+commit d6f6b3f0a89324475e1c5e8d19b1d92a74f201aa
+Author: John Doe <john@example.com>
+Date:   Thu Aug 05 16:00:00 2023 +0200
+
+    Initial project setup: Add README and LICENSE
+
+```
+
+on the other hand git reflog command provides a comprehensive record of all the moves/update your HEAD Pointer go through while working in the repo. It maintains a reference log of Head Pointer which includes changes to branches (switching between branches) and tags, commit amendments, rebase operations, and other reference updates. Essentially, every type of update you Head Pointer go through within the repository is recorded in the reflog.
+
+git reflog keeps a recod of every update your Head pointer go through in the repo. so in simple terms every time you do anything and your head updates. reflog recod that change.
+
+```
+commithash    refpoint:  update/action you have performed
+
+a1b2c3d       HEAD@{0}: commit: Fixed a critical bug
+e4f5g6h       HEAD@{1}: rebase finished: updating HEAD
+i7j8k9l       HEAD@{2}: pull origin main: Fast-forward
+m0n1o2p       HEAD@{3}: commit: Added new feature
+```
+
+> Note:
+
+Limitations! Git only keeps reflogs of your local activity. They are not shared with collaborators and not pushed to github nor you pull other people reflog its totally a local thing. reflog are tracked by git in your local machine and it is only for local reference. Reflogs also expires after sometime. Git cleans out old entries after around 90 days, though this can be configured.
+
+> reflog syntex:
+
+```
+git reflog                    // show head is implisit by default
+git reflog show Head          // you can define (branch, refpoint) inplace of head
+ex: git reflog show main
+ex: git reflog show HEAD@{3}
+```
+
+> reflog refrence point
+
+```
+name@{qualifer}
+
+// name can be any branch or simple head
+// qualifer can be Number which act has back button
+// qualifer can also be Time refernce
+```
+
+Reflog References We can access specific git refs is name@{qualifier}. We can use this syntax to access specific ref pointers and can pass them to other commands including checkout, reset, and merge.
+
+> qualifer as Timed References
+
+Every entry in the reference logs has a timestamp associated with it. We can filter reflogs entries by time/date by using time qualifiers like:
+
+```
+1.day.ago
+3.minutes.ago
+yesterday
+Fri, 12 Feb 2021 14:06:21 -0800
+```
+
+```
+Ex: git reflog show manin@{yesterday}
+```
+
+> use reflog to recover code that you have lost
+
+you can recover lost code when you screw-up your code. screw-up like use the rebase which rewrite the commit history (commit history has been tempered with but reflog is still un-touched), or you have deleted at a perticuler commit while useing intereactive rebase, or you have removed some file during a perticuler commit.
+
+you can recover all that by simply checking reflog and pick a commithash point in the history of reflog. commithash you want to go back to and fix anything that you have screwup. you can undo at that perticuler commit with git reset --hard <commithash> it will reset the commit histroy as if that recoved commit is the current head + recover the file code too.
+
+```
+git reset --hard <commitHash>
+git reset --hard name@{qualifer}
+```

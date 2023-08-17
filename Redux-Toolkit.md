@@ -1,11 +1,9 @@
-### UI.dev redux
+# UI.dev redux
 
----
+**VS CODE ShortCut**
 
-VS CODE ShortCut
-
-adding indentation : press tab
-remove indentation: press shfit + tab
+1. adding indentation : press tab
+1. remove indentation: press shfit + tab
 
 ---
 
@@ -24,7 +22,7 @@ by increasing the predictability of the state of our app, we can drasticly decre
 
 main philosophy behind using any state management library is to make state more predictable.
 
-# how to make state more predictabale
+## how to make state more predictabale
 
 generally when you make app you have n number of state spreading throughout the application.
 
@@ -36,50 +34,50 @@ if our goal is to make state more predictable in our app. the solution will be i
 
 all of the state insted of being spread across our entire app is going to be at one location and we call that location a state tree.
 
-# why is it benefical to have a state tree (centerlized)?
+## why is it benefical to have a state tree (centerlized)?
 
 benefits of state tree?
 
-1. shared cache
+1. `**shared cache**`
 
-if two or more component need exect piece of state what you will do?
+   if two or more component need exect piece of state what you will do?
 
-move the shared-state up in the component tree (uplifting) and do prop-drilling till you reach to those child-component those actually use them.
+   move the shared-state up in the component tree (uplifting) and do prop-drilling till you reach to those child-component those actually use them.
 
-Ex: what if this is a large APP and nearest parent component that can share state to both of the child-component is 7-10 level up in the component tree?
+   Ex: what if this is a large APP and nearest parent component that can share state to both of the child-component is 7-10 level up in the component tree?
 
-for that you need to again put the state in that parent (10 levelUp/uplifting) and you need to do alot of plumbing (prop-driling) to all the middle component to share that state to those component that actually need it.
+   for that you need to again put the state in that parent (10 levelUp/uplifting) and you need to do alot of plumbing (prop-driling) to all the middle component to share that state to those component that actually need it.
 
-if all of our state are at single state Tree (at single location/centerlized). outside of our component tree then those component who are in need of the state's can get those state from the state tree directly without going through the hasle of lifting and prop-driling.
+   if all of our state are at single state Tree (at single location/centerlized). outside of our component tree then those component who are in need of the state's can get those state from the state tree directly without going through the hasle of lifting and prop-driling.
 
-2. predictable state changes
+2. `**predictable state changes**`
 
-by having all of our state at single location (state tree). we can set some strict rules for all the states for how the states can be updated? how can you get the state? and all the component that are consuming those states will automatically will be updated when any state get's updated in the state tree. those interensic imposed strict Rules will make your states more predictable becouse those state can only be updated and get access by predefined method which follow some strict rules to intereact with the shared-state. which helps us to avoid bugs cozed by miss-management of state.
+   by having all of our state at single location (state tree). we can set some strict rules for all the states for how the states can be updated? how can you get the state? and all the component that are consuming those states will automatically will be updated when any state get's updated in the state tree. those interensic imposed strict Rules will make your states more predictable becouse those state can only be updated and get access by predefined method which follow some strict rules to intereact with the shared-state. which helps us to avoid bugs cozed by miss-management of state.
 
-EX: we don't want anyone to update those shared state by providing these own version of state updater methods. state can only be updated by one method (that follow some rule or is predefined) and if anyone want to update the state of the shared state then they need to use that predefined Method. if anyone can update the state by there provided version of updater state. it's more venrnable to make mistakes and due to that entire app state managment suffers.
+   EX: we don't want anyone to update those shared state by providing these own version of state updater methods. state can only be updated by one method (that follow some rule or is predefined) and if anyone want to update the state of the shared state then they need to use that predefined Method. if anyone can update the state by there provided version of updater state. it's more venrnable to make mistakes and due to that entire app state managment suffers.
 
-so it is importent to only use the predefiend method to update the state of the shared state.
+   so it is importent to only use the predefiend method to update the state of the shared state.
 
-that predefined method follow some strict rule so when ever we use those predefined method it will updated the state in predictable manner with no sideEffect.(pure function,reducer)
+   that predefined method follow some strict rule so when ever we use those predefined method it will updated the state in predictable manner with no sideEffect.(pure function,reducer)
 
-3. improve developer Tooling
+3. `**improve developer Tooling**`
 
-since all of your state lives at a single location (state tree) which is out of the component structures or component tree or react app. when ever any state get updated. that updated state is aviliable to access in the entire app.
+   since all of your state lives at a single location (state tree) which is out of the component structures or component tree or react app. when ever any state get updated. that updated state is aviliable to access in the entire app.
 
-if the state is located all over the app/component.
-re-rendering of the component can throw away the state, get back to inital state.(user fill the form and excidently refresh the page and user had to fill the form from scratch)
+   if the state is located all over the app/component.
+   re-rendering of the component can throw away the state, get back to inital state.(user fill the form and excidently refresh the page and user had to fill the form from scratch)
 
-having state at single location make it eaiser to handle share state,debugging state related problems(impove dev experience).
+   having state at single location make it eaiser to handle share state,debugging state related problems(impove dev experience).
 
-for ex: you are shareing state between 2 component which has 5 component in the middle you need to check all the component one by one which one is cozing the bug. on the other hand having single location for state make it easier to handle error.(redux dev tool)
+   for ex: you are shareing state between 2 component which has 5 component in the middle you need to check all the component one by one which one is cozing the bug. on the other hand having single location for state make it easier to handle error.(redux dev tool)
 
-4. pure functions
+4. `**pure functions**`
 
-we use pure function to get the states and update the state. pure function have no sideEffect. they are predictable.
+   we use pure function to get the states and update the state. pure function have no sideEffect. they are predictable.
 
-5. serverside rendering.
+5. `**serverside rendering**`
 
-if all of the state is on one location then it is easier to get the data and place them in the UI for easier HTML page buildUp. which will improve inital loadtime for client side.
+   if all of the state is on one location then it is easier to get the data and place them in the UI for easier HTML page buildUp. which will improve inital loadtime for client side.
 
 # how to intereact with the state tree?
 
@@ -89,7 +87,7 @@ we need few functionallity to work with state tree.
 2. update the state of the state tree.
 3. listen to anychanges happening in the state tree. so those component who are consuming the state from the state tree can acess the updated state. when ever any state change happen in the state Tree.
 
-store: is a container/wrapper which keeps/contains the state at single location state tree and have predictable methods to intereact with the states of the state tree like get,update and listen.
+`**store**`: is a container/wrapper which keeps/contains the state at single location state tree and have predictable methods to intereact with the states of the state tree like get,update and listen.
 
 if we can do all of these thing in predictable manner (follow some strict rule). we have a state management library.
 
@@ -100,10 +98,10 @@ first we need to create store which contain state, get,update,listen methods.
 createStore fn will create a store for us.
 a store have four parts to it.
 
-1. The state = state of our entire applications (called state)
-2. Get the state = a method to consume state inside component.
-3. Listen to change on the state = a listener which listen/keep track of the state and get executed whenever anything changes/update happen to the state. (called listener)
-4. Update the state = a method to update the state.
+1. `**The state**` : state of our entire applications (called state)
+2. `**Get the state**` : a method to consume state inside component.
+3. `**Listen to change on the state**` : a listener which listen/keep track of the state and get executed whenever anything changes/update happen to the state. (called listener)
+4. `**Update the state**` : a method to update the state.
 
 when ever you execute createStore fn. it will create a store which contain all of these (state,get,listen,update) and return (get,listen,update) method to intreact with the state.
 
