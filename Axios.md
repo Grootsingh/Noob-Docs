@@ -1,6 +1,4 @@
-> Resource: from the docs:
-
-Axios 1.4.0
+> ## Axios version: 1.4.0
 
 ## why use Axios over fetch?
 

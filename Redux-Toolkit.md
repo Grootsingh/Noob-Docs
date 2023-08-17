@@ -1,3 +1,5 @@
+> ## Redux-Toolkit version: 1.9.5
+
 # UI.dev redux
 
 ---

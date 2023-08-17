@@ -1,6 +1,4 @@
 > ## TanStack version: 4.3
->
-> Resource: from the Docs
 
 # Phase of fetching.
 
