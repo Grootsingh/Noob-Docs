@@ -1,7 +1,5 @@
 > ## React Router version: 6.15.0
 
-> Learn React Router 6 with Bob Ziroll (Course)
-
 # Chapter:1 Introduction to React Router
 
 ## 1.BrowserRouter
