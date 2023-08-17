@@ -1,4 +1,4 @@
-> ## Axios version: 1.4.0
+> ## React Router version: 6.15.0
 
 > Learn React Router 6 with Bob Ziroll (Course)
 
