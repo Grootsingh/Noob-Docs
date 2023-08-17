@@ -38,7 +38,7 @@ all of the state insted of being spread across our entire app is going to be at 
 
 benefits of state tree?
 
-1. `**shared cache**`
+1. **`shared cache`**
 
    if two or more component need exect piece of state what you will do?
 
@@ -50,7 +50,7 @@ benefits of state tree?
 
    if all of our state are at single state Tree (at single location/centerlized). outside of our component tree then those component who are in need of the state's can get those state from the state tree directly without going through the hasle of lifting and prop-driling.
 
-2. `**predictable state changes**`
+2. **`predictable state changes`**
 
    by having all of our state at single location (state tree). we can set some strict rules for all the states for how the states can be updated? how can you get the state? and all the component that are consuming those states will automatically will be updated when any state get's updated in the state tree. those interensic imposed strict Rules will make your states more predictable becouse those state can only be updated and get access by predefined method which follow some strict rules to intereact with the shared-state. which helps us to avoid bugs cozed by miss-management of state.
 
@@ -60,7 +60,7 @@ benefits of state tree?
 
    that predefined method follow some strict rule so when ever we use those predefined method it will updated the state in predictable manner with no sideEffect.(pure function,reducer)
 
-3. `**improve developer Tooling**`
+3. **`improve developer Tooling`**
 
    since all of your state lives at a single location (state tree) which is out of the component structures or component tree or react app. when ever any state get updated. that updated state is aviliable to access in the entire app.
 
@@ -71,11 +71,11 @@ benefits of state tree?
 
    for ex: you are shareing state between 2 component which has 5 component in the middle you need to check all the component one by one which one is cozing the bug. on the other hand having single location for state make it easier to handle error.(redux dev tool)
 
-4. `**pure functions**`
+4. **`pure functions`**
 
    we use pure function to get the states and update the state. pure function have no sideEffect. they are predictable.
 
-5. `**serverside rendering**`
+5. **`serverside rendering`**
 
    if all of the state is on one location then it is easier to get the data and place them in the UI for easier HTML page buildUp. which will improve inital loadtime for client side.
 
@@ -87,7 +87,7 @@ we need few functionallity to work with state tree.
 2. update the state of the state tree.
 3. listen to anychanges happening in the state tree. so those component who are consuming the state from the state tree can acess the updated state. when ever any state change happen in the state Tree.
 
-`**store**`: is a container/wrapper which keeps/contains the state at single location state tree and have predictable methods to intereact with the states of the state tree like get,update and listen.
+**`store`**: is a container/wrapper which keeps/contains the state at single location state tree and have predictable methods to intereact with the states of the state tree like get,update and listen.
 
 if we can do all of these thing in predictable manner (follow some strict rule). we have a state management library.
 
@@ -98,10 +98,10 @@ first we need to create store which contain state, get,update,listen methods.
 createStore fn will create a store for us.
 a store have four parts to it.
 
-1. `**The state**` : state of our entire applications (called state)
-2. `**Get the state**` : a method to consume state inside component.
-3. `**Listen to change on the state**` : a listener which listen/keep track of the state and get executed whenever anything changes/update happen to the state. (called listener)
-4. `**Update the state**` : a method to update the state.
+1. **`The state`** : state of our entire applications (called state)
+2. **`Get the state`** : a method to consume state inside component.
+3. **`Listen to change on the state`** : a listener which listen/keep track of the state and get executed whenever anything changes/update happen to the state. (called listener)
+4. **`Update the state`** : a method to update the state.
 
 when ever you execute createStore fn. it will create a store which contain all of these (state,get,listen,update) and return (get,listen,update) method to intreact with the state.
 
