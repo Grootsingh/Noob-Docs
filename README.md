@@ -38,8 +38,6 @@ Ready to embark on your learning journey? Start by exploring the documentation f
 - [Zod Documentation](Zod.md)
 - [Git and GitHub](Git-GitHub.md)
 
-Happy learning! 🎉
-
 ## ⭐ Give This Repo a Star
 
 If you find Noob Docs helpful and valuable for your learning journey, consider giving this repository a star on GitHub. Your support encourages us to continue providing beginner-friendly documentation for various technologies.
