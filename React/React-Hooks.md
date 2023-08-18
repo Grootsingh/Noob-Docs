@@ -1,3 +1,5 @@
+> ## React version: 18.2.0
+
 # chapter: 1 useState greeting
 
 State can be defined as: data that changes over time.

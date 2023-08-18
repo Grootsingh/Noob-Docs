@@ -1,3 +1,5 @@
+> ## React version: 18.2.0
+
 # chapter 1: Basic JavaScript-rendered Hello World
 
 The browser takes this HTML code and generates the DOM (the Document Object

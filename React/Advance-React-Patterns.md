@@ -1,3 +1,5 @@
+> ## React version: 18.2.0
+
 # 1. Context-Module-pattern
 
 to understand we have to go through an ex:

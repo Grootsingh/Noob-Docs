@@ -1,3 +1,5 @@
+> ## React version: 18.2.0
+
 # React Docs: useMemo
 
 useMemo is a React Hook that lets you cache/memoize the result of a calculation

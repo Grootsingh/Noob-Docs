@@ -2423,7 +2423,7 @@ Here's how the process of forking works on GitHub:
 
 ## What is Pull Request (PR)
 
-<span style="opacity: 0.6;">It is a request to the owner of the repository to merge your branch to the original repo.<snap>
+<span style="opacity: 0.6;">It is a request to the owner of the repository to merge your branch to the original repo.<span>
 
 when we use git pull origin. we fetch + merge changes to the working directory but in our local machine. in pull request we want the owner of the repository to fetch our branch and merge our branch to there working directory.
 
